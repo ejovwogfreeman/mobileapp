@@ -67,18 +67,16 @@ const Slider = () => {
   useEffect(() => {
     const scrollInterval = Animated.timing(scrollX, {
       toValue: 1,
-      duration: 1000, // Adjust the duration as needed (5000ms = 5 seconds)
+      duration: 1000,
       easing: Easing.linear,
       useNativeDriver: false,
     });
 
     scrollInterval.start(() => {
-      // Reset the scroll position to the beginning
       if (scrollViewRef.current) {
         scrollViewRef.current.scrollTo({ x: 0, animated: false });
       }
 
-      // Start the scroll animation again
       scrollInterval.start();
     });
 
@@ -88,12 +86,17 @@ const Slider = () => {
   }, []);
 
   return (
-    <View>
+    <View
+      style={{
+        paddingLeft: 20,
+        paddingRight: 20,
+      }}
+    >
       <ScrollView
         ref={scrollViewRef}
         horizontal
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ paddingRight: 20 }}
+        contentContainerStyle={{ paddingRight: 30 }}
         scrollEventThrottle={16}
         onScroll={Animated.event(
           [{ nativeEvent: { contentOffset: { x: scrollX } } }],
@@ -119,7 +122,8 @@ const Slider = () => {
 const styles = StyleSheet.create({
   slide: {
     margin: 25,
-    marginTop: 30,
+    marginLeft: 0,
+    marginTop: 50,
   },
 });
 

@@ -1,0 +1,73 @@
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import HomeScreen from "../screens/home/HomeScreen";
+import ServiceScreen from "../screens/home/ServiceScreen";
+import ActivityScreen from "../screens/home/ActivityScreen";
+import AccountScreen from "../screens/home/AccountScreen";
+import Icon from "react-native-vector-icons/MaterialIcons";
+import { colors } from "../components/Colors";
+import { StyleSheet } from "react-native";
+
+const Tab = createBottomTabNavigator();
+
+const BottomTabNavigator = () => {
+  return (
+    <Tab.Navigator
+      style={styles.tabStyle}
+      screenOptions={({ route }) => ({
+        headerShown: false,
+        tabBarShowLabel: false,
+        tabBarStyle: {
+          backgroundColor: colors.primary,
+          paddingTop: 20,
+          borderTopColor: colors.opaque,
+          borderTopWidth: 5,
+        },
+        tabBarActiveTintColor: colors.white,
+        tabBarInactiveTintColor: colors.opaque,
+        tabBarIcon: ({ color }) => {
+          let iconName;
+          if (route.name === "Home") {
+            iconName = "home";
+          } else if (route.name === "Service") {
+            iconName = "apps";
+          } else if (route.name === "Activity") {
+            iconName = "fact-check";
+          } else if (route.name === "Account") {
+            iconName = "person";
+          }
+
+          return <Icon name={iconName} size={22} color={color} />;
+        },
+      })}
+    >
+      <Tab.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{ headerShown: false }}
+      />
+      <Tab.Screen
+        name="Service"
+        component={ServiceScreen}
+        options={{ headerShown: false }}
+      />
+      <Tab.Screen
+        name="Activity"
+        component={ActivityScreen}
+        options={{ headerShown: false }}
+      />
+      <Tab.Screen
+        name="Account"
+        component={AccountScreen}
+        options={{ headerShown: false }}
+      />
+    </Tab.Navigator>
+  );
+};
+
+const styles = StyleSheet.create({
+  tabStyle: {
+    backgroundColor: colors.primary,
+  },
+});
+
+export default BottomTabNavigator;

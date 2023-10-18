@@ -1,15 +1,25 @@
 import React from "react";
-import { colors } from "../components/Colors";
-import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import { colors } from "../../components/Colors";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 const AccountScreen = () => {
   return (
-    <View style={styles.accountContainer}>
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      style={styles.accountContainer}
+    >
       <View style={styles.userInfo}>
         <Text style={styles.username}>Ejovwo Godbless</Text>
         <Image
-          source={require("../../assets/defaultprofile.jpg")}
+          source={require("../../../assets/defaultprofile.jpg")}
           style={styles.image}
         />
       </View>
@@ -71,13 +81,15 @@ const AccountScreen = () => {
           <Text style={styles.actionText}>Legal</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   accountContainer: {
     padding: 20,
+    backgroundColor: colors.primary,
+    flex: 1,
   },
   userInfo: {
     flexDirection: "row",

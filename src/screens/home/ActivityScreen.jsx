@@ -1,21 +1,21 @@
 import React from "react";
-import { colors } from "../components/Colors";
+import { colors } from "../../components/Colors";
 import { View, Text, StyleSheet } from "react-native";
-import Services from "../components/Services";
 
-const ServiceScreen = () => {
+const ActivityScreen = () => {
   return (
-    <View style={styles.serviceContainer}>
-      <Text style={styles.bigText}>Services</Text>
-      <Text style={styles.smallText}>Our Services Includes</Text>
-      <Services />
+    <View style={styles.activityContainer}>
+      <Text style={styles.bigText}>Activities</Text>
+      <Text style={styles.smallText}>You don't have any recent activity</Text>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  serviceContainer: {
+  activityContainer: {
     padding: 20,
+    backgroundColor: colors.primary,
+    flex: 1,
   },
   bigText: {
     fontSize: 30,
@@ -31,4 +31,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ServiceScreen;
+export default ActivityScreen;

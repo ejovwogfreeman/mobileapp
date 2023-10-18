@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Image, StyleSheet } from "react-native";
+import { colors } from "./Colors";
 
 const Services = () => {
   return (
@@ -19,7 +20,11 @@ const Services = () => {
 const styles = StyleSheet.create({
   serviceContainer: {
     flexDirection: "row",
-    marginTop: 10,
+    padding: 10,
+    paddingLeft: 20,
+    paddingRight: 20,
+    backgroundColor: colors.primary,
+    paddingBottom: 20,
   },
   imageLeft: {
     flex: 1,

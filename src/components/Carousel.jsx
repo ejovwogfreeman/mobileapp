@@ -79,10 +79,15 @@ const styles = StyleSheet.create({
   carouselContainer: {
     width: "100%",
     height: 200,
-    marginTop: 12,
+    marginTop: 0,
+    backgroundColor: colors.primary,
+    padding: 10,
+    paddingBottom: 0,
+    paddingRight: 20,
+    paddingLeft: 20,
   },
   carouselImage: {
-    width: Dimensions.get("window").width - 20,
+    width: Dimensions.get("window").width - 40,
     height: "100%",
     objectFit: "cover",
     borderRadius: 10,
