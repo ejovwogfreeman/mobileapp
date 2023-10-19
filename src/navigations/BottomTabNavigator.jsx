@@ -2,10 +2,11 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeScreen from "../screens/home/HomeScreen";
 import ServiceScreen from "../screens/home/ServiceScreen";
 import ActivityScreen from "../screens/home/ActivityScreen";
-import AccountScreen from "../screens/home/AccountScreen";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { colors } from "../components/Colors";
 import { StyleSheet } from "react-native";
+import AccountNavigator from "./AccountNavigator";
+import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 
 const Tab = createBottomTabNavigator();
 
@@ -15,10 +16,9 @@ const BottomTabNavigator = () => {
       style={styles.tabStyle}
       screenOptions={({ route }) => ({
         headerShown: false,
-        tabBarShowLabel: false,
         tabBarStyle: {
           backgroundColor: colors.primary,
-          paddingTop: 20,
+          paddingTop: 10,
           borderTopColor: colors.opaque,
           borderTopWidth: 5,
         },
@@ -57,11 +57,34 @@ const BottomTabNavigator = () => {
       />
       <Tab.Screen
         name="Account"
-        component={AccountScreen}
-        options={{ headerShown: false }}
+        component={AccountNavigator}
+        options={({ route }) => ({
+          tabBarStyle: {
+            display: getTabBarVisibility(route),
+            backgroundColor: colors.primary,
+            paddingTop: 10,
+            borderTopColor: colors.opaque,
+            borderTopWidth: 5,
+          },
+        })}
+        initialParams={{ getTabBarVisibility }}
       />
     </Tab.Navigator>
   );
+};
+
+const getTabBarVisibility = (route) => {
+  const routeName = getFocusedRouteNameFromRoute(route);
+
+  if (
+    routeName === "Family" ||
+    routeName === "Settings" ||
+    routeName === "Messages"
+  ) {
+    return "none";
+  }
+
+  return "flex";
 };
 
 const styles = StyleSheet.create({

@@ -6,8 +6,10 @@ import Services from "../../components/Services";
 const ServiceScreen = () => {
   return (
     <View style={styles.serviceContainer}>
-      <Text style={styles.bigText}>Services</Text>
-      <Text style={styles.smallText}>Our Services Includes</Text>
+      <View style={styles.services}>
+        <Text style={styles.bigText}>Services</Text>
+        <Text style={styles.smallText}>Our Services Includes</Text>
+      </View>
       <Services />
     </View>
   );
@@ -15,9 +17,12 @@ const ServiceScreen = () => {
 
 const styles = StyleSheet.create({
   serviceContainer: {
-    padding: 20,
+    padding: 0,
     backgroundColor: colors.primary,
     flex: 1,
+  },
+  services: {
+    padding: 20,
   },
   bigText: {
     fontSize: 30,

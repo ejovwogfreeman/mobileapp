@@ -10,7 +10,17 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
-const AccountScreen = () => {
+const AccountScreen = ({ navigation }) => {
+  // const navigation = useNavigation();
+
+  // const openDrawer = () => {
+  //   navigation.openDrawer(); // This opens the bottom drawer
+  // };
+
+  // const openDrawer = () => {
+  //   navigation.navigate("Family", { screen: "FamilyScreen" });
+  // };
+
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -48,15 +58,24 @@ const AccountScreen = () => {
         </Text>
       </TouchableOpacity>
       <View style={styles.action}>
-        <TouchableOpacity style={styles.actionIcon}>
+        <TouchableOpacity
+          style={styles.actionIcon}
+          onPress={() => navigation.navigate("Family")}
+        >
           <Icon name="family-restroom" size={30} color={colors.secondary} />
           <Text style={styles.actionText}>Family</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.actionIcon}>
+        <TouchableOpacity
+          style={styles.actionIcon}
+          onPress={() => navigation.navigate("Settings")}
+        >
           <Icon name="settings" size={30} color={colors.secondary} />
           <Text style={styles.actionText}>Settings</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.actionIcon}>
+        <TouchableOpacity
+          style={styles.actionIcon}
+          onPress={() => navigation.navigate("Messages")}
+        >
           <Icon name="message" size={30} color={colors.secondary} />
           <Text style={styles.actionText}>Messages</Text>
         </TouchableOpacity>
@@ -79,6 +98,15 @@ const AccountScreen = () => {
         <TouchableOpacity style={styles.actionIcon}>
           <Icon name="policy" size={30} color={colors.secondary} />
           <Text style={styles.actionText}>Legal</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.actionIcon}>
+          <Icon
+            name="logout"
+            onPress={() => navigation.navigate("Login")}
+            size={30}
+            color={colors.secondary}
+          />
+          <Text style={styles.actionText}>Logout</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>
@@ -146,6 +174,8 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(256, 256, 256, 0.09)",
     borderRadius: 10,
     padding: 10,
+    paddingBottom: 0,
+    marginBottom: 30,
   },
   actionIcon: {
     flexDirection: "row",
