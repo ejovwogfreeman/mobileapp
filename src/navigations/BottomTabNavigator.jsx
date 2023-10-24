@@ -67,7 +67,6 @@ const BottomTabNavigator = () => {
             borderTopWidth: 5,
           },
         })}
-        initialParams={{ getTabBarVisibility }}
       />
     </Tab.Navigator>
   );

@@ -1,28 +1,26 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import AccountScreen from "../screens/home/AccountScreen";
-import FamilyScreen from "../screens/account/FamilyScreen";
-import SettingScreen from "../screens/account/SettingScreen";
 import MessageScreen from "../screens/account/MessageScreen";
-// import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
+import SettingsNavigator from "./SettingsNavigator";
 
 const Stack = createStackNavigator();
 
 const AccountNavigator = () => {
   return (
-    <Stack.Navigator initialRouteName="Account" mode="modal" headerMode="none">
+    <Stack.Navigator
+      initialRouteName="AccountScreen"
+      screenOptions={{
+        presentation: "modal",
+      }}
+    >
       <Stack.Screen
-        name="Account"
+        name="AccountScreen"
         component={AccountScreen}
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="Family"
-        component={FamilyScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="Settings"
-        component={SettingScreen}
+        name="SettingsNav"
+        component={SettingsNavigator}
         options={{ headerShown: false }}
       />
       <Stack.Screen

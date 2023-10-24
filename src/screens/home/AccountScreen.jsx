@@ -11,16 +11,6 @@ import {
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 const AccountScreen = ({ navigation }) => {
-  // const navigation = useNavigation();
-
-  // const openDrawer = () => {
-  //   navigation.openDrawer(); // This opens the bottom drawer
-  // };
-
-  // const openDrawer = () => {
-  //   navigation.navigate("Family", { screen: "FamilyScreen" });
-  // };
-
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -60,14 +50,7 @@ const AccountScreen = ({ navigation }) => {
       <View style={styles.action}>
         <TouchableOpacity
           style={styles.actionIcon}
-          onPress={() => navigation.navigate("Family")}
-        >
-          <Icon name="family-restroom" size={30} color={colors.secondary} />
-          <Text style={styles.actionText}>Family</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.actionIcon}
-          onPress={() => navigation.navigate("Settings")}
+          onPress={() => navigation.navigate("SettingsNav")}
         >
           <Icon name="settings" size={30} color={colors.secondary} />
           <Text style={styles.actionText}>Settings</Text>
@@ -80,20 +63,8 @@ const AccountScreen = ({ navigation }) => {
           <Text style={styles.actionText}>Messages</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.actionIcon}>
-          <Icon name="drive-eta" size={30} color={colors.secondary} />
-          <Text style={styles.actionText}>Earn by Driving</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.actionIcon}>
           <Icon name="delivery-dining" size={30} color={colors.secondary} />
           <Text style={styles.actionText}>Earn by Delivering</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.actionIcon}>
-          <Icon name="business" size={30} color={colors.secondary} />
-          <Text style={styles.actionText}>Business Hub</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.actionIcon}>
-          <Icon name="person" size={30} color={colors.secondary} />
-          <Text style={styles.actionText}>Manage Account</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.actionIcon}>
           <Icon name="policy" size={30} color={colors.secondary} />
@@ -171,7 +142,7 @@ const styles = StyleSheet.create({
   },
   action: {
     marginTop: 10,
-    backgroundColor: "rgba(256, 256, 256, 0.09)",
+    backgroundColor: "rgba(256, 256, 256, 0.05)",
     borderRadius: 10,
     padding: 10,
     paddingBottom: 0,

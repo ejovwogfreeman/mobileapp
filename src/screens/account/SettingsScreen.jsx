@@ -9,7 +9,7 @@ import {
 import { colors } from "../../components/Colors";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
-const MessageScreen = ({ navigation }) => {
+const SettingsScreen = ({ navigation }) => {
   const translateY = useRef(new Animated.Value(300)).current;
   const [drawerOpen, setDrawerOpen] = useState(false);
 
@@ -55,9 +55,26 @@ const MessageScreen = ({ navigation }) => {
         >
           <Icon name="close" size={30} color={colors.secondary} />
         </TouchableOpacity>
-        <View>
-          <Text style={styles.bigText}>Messages</Text>
-          <Text style={styles.smallText}>No Message yet</Text>
+        <View style={styles.menuItem}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("AddHome")}
+            style={styles.menuButton}
+          >
+            <Text style={styles.menuText}>Add Home</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => navigation.navigate("AddWork")}
+            style={styles.menuButton}
+          >
+            <Text style={styles.menuText}>Add Work</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("ChangePassword")}
+            style={styles.menuButton}
+          >
+            <Text style={styles.menuText}>Change Password</Text>
+          </TouchableOpacity>
         </View>
       </Animated.View>
     </View>
@@ -68,18 +85,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.primary,
-  },
-  bigText: {
-    fontSize: 30,
-    color: colors.white,
-    fontWeight: "bold",
-    marginBottom: 20,
-  },
-  smallText: {
-    fontSize: 20,
-    color: colors.white,
-    fontWeight: "bold",
-    marginBottom: 10,
   },
   drawer: {
     position: "absolute",
@@ -120,4 +125,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MessageScreen;
+export default SettingsScreen;
