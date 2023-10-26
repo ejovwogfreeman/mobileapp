@@ -7,6 +7,7 @@ import { colors } from "../components/Colors";
 import { StyleSheet } from "react-native";
 import AccountNavigator from "./AccountNavigator";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
+import HomeNavigator from "./HomeNavigator";
 
 const Tab = createBottomTabNavigator();
 
@@ -42,7 +43,7 @@ const BottomTabNavigator = () => {
     >
       <Tab.Screen
         name="Home"
-        component={HomeScreen}
+        component={HomeNavigator}
         options={{ headerShown: false }}
       />
       <Tab.Screen

@@ -14,7 +14,7 @@ import {
 import { colors } from "../../components/Colors";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
-const LoginScreen = ({ navigation }) => {
+const ForgotPassword = ({ navigation }) => {
   const handleLogin = () => {
     navigation.navigate("HomeScreen");
   };
@@ -33,7 +33,7 @@ const LoginScreen = ({ navigation }) => {
                 style={styles.image}
               />
             </View>
-            <Text style={styles.label}>Email</Text>
+            <Text style={styles.label}>Enter Your Registered Email</Text>
             <View style={styles.inputbox}>
               <Icon
                 name="mail"
@@ -47,39 +47,15 @@ const LoginScreen = ({ navigation }) => {
                 placeholder="Email"
               />
             </View>
-            <Text style={styles.label}>Password</Text>
-            <View style={styles.inputbox}>
-              <Icon
-                name="lock"
-                size={24}
-                style={styles.searchIcon}
-                color={colors.secondary}
-              />
-              <TextInput
-                placeholderTextColor={colors.opaque}
-                style={styles.input}
-                placeholder="Password"
-                secureTextEntry={true}
-              />
-            </View>
             <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-              <Text style={styles.loginButtonText}>LOGIN</Text>
+              <Text style={styles.loginButtonText}>SEND MAIL</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.registerButton}
-              onPress={() => navigation.navigate("ForgotPassword")}
+              onPress={() => navigation.navigate("Login")}
             >
-              <Text style={styles.forgotPassword}>Forgot Password?</Text>
+              <Text style={styles.forgotPassword}>Back To Login</Text>
             </TouchableOpacity>
-            <View style={styles.newSec}>
-              <Text style={styles.text}>New here?</Text>
-              <TouchableOpacity
-                style={styles.registerButton}
-                onPress={() => navigation.navigate("Register")}
-              >
-                <Text style={styles.registerButtonText}>Register</Text>
-              </TouchableOpacity>
-            </View>
           </View>
         </View>
       </TouchableWithoutFeedback>
@@ -104,6 +80,13 @@ const styles = StyleSheet.create({
   userInfo: {
     padding: 20,
     paddingTop: 100,
+  },
+  loginText: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: colors.secondary,
+    textAlign: "center",
+    marginBottom: 20,
   },
   label: {
     color: colors.secondary,
@@ -157,17 +140,6 @@ const styles = StyleSheet.create({
     textDecorationLine: "underline",
     marginBottom: 15,
   },
-  text: {
-    fontSize: 16,
-    color: colors.secondary,
-    marginRight: 10,
-  },
-  registerButtonText: {
-    fontSize: 16,
-    color: colors.secondary,
-    fontWeight: "bold",
-    textDecorationLine: "underline",
-  },
 });
 
-export default LoginScreen;
+export default ForgotPassword;

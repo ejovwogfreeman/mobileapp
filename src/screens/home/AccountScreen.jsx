@@ -70,13 +70,11 @@ const AccountScreen = ({ navigation }) => {
           <Icon name="policy" size={30} color={colors.secondary} />
           <Text style={styles.actionText}>Legal</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.actionIcon}>
-          <Icon
-            name="logout"
-            onPress={() => navigation.navigate("Login")}
-            size={30}
-            color={colors.secondary}
-          />
+        <TouchableOpacity
+          style={styles.actionIcon}
+          onPress={() => navigation.navigate("Login")}
+        >
+          <Icon name="logout" size={30} color={colors.secondary} />
           <Text style={styles.actionText}>Logout</Text>
         </TouchableOpacity>
       </View>

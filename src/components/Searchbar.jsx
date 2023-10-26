@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, TextInput, StyleSheet } from "react-native";
+import { View, TextInput, StyleSheet, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { colors } from "./Colors";
 
@@ -13,6 +13,8 @@ const Searchbar = () => {
         placeholder="Enter Pickup location"
         value={searchText}
         onChangeText={(text) => setSearchText(text)}
+        placeholderTextColor={colors.tertiary}
+        editable={false}
       />
       <Icon name="search" size={24} style={styles.searchIcon} />
     </View>

@@ -1,19 +1,22 @@
 import React from "react";
-import { StyleSheet, Image, View, Text } from "react-native";
+import { StyleSheet, Image, View, Text, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { colors } from "./Colors";
 
-const Header = () => {
+const Header = ({ navigation }) => {
   return (
     <View style={styles.header}>
       <View style={styles.headerContent}>
         <View style={styles.text}>
           <Text style={styles.text1}>Want Better Pickups?</Text>
           <Text style={styles.text2}>Worry No More...</Text>
-          <View style={styles.seeMore}>
+          <TouchableOpacity
+            style={styles.seeMore}
+            onPress={() => navigation.navigate("MapScreen")}
+          >
             <Text style={styles.text3}>Share Locations</Text>
             <Icon name="east" size={20} color={colors.black} />
-          </View>
+          </TouchableOpacity>
         </View>
         <Image
           source={require("../../assets/dispatch.png")}
