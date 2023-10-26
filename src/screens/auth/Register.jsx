@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     flexDirection: "row",
-    borderColor: "gray",
+    borderColor: colors.opaque,
     borderWidth: 1,
     backgroundColor: "rgba(256,256,256,0.05)",
     color: colors.secondary,
