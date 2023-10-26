@@ -4,6 +4,7 @@ import {
   StyleSheet,
   Keyboard,
   TouchableWithoutFeedback,
+  ImageBackground,
 } from "react-native";
 import Searchbar from "../../components/Searchbar";
 import { colors } from "../../components/Colors";
@@ -15,19 +16,25 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 
 const HomeScreen = ({ navigation }) => {
   return (
-    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <View style={styles.container}>
-        <View style={styles.topContainer}>
+    <View style={styles.container}>
+      <View style={styles.topContainer}>
+        <ImageBackground
+          source={require("../../../assets/background.png")}
+          style={{
+            width: "100%",
+            height: "100%",
+          }}
+        >
           <TouchableOpacity onPress={() => navigation.navigate("MapScreen")}>
             <Searchbar />
           </TouchableOpacity>
           <Header navigation={navigation} />
-          <Slider />
-          <Carousel />
-          <Services />
-        </View>
+        </ImageBackground>
       </View>
-    </TouchableWithoutFeedback>
+      <Slider />
+      <Carousel />
+      <Services />
+    </View>
   );
 };
 
@@ -40,6 +47,7 @@ const styles = StyleSheet.create({
     borderColor: colors.secondary,
     borderBottomRightRadius: 100,
     backgroundColor: colors.primary,
+    overflow: "hidden",
     zIndex: 1,
   },
 });

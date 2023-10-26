@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
     margin: 25,
     marginLeft: 0,
     marginRight: 18,
-    marginTop: 50,
+    marginTop: 18,
   },
 });
 
