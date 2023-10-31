@@ -1,27 +1,170 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
-  Text,
   StyleSheet,
-  Dimensions,
-  Image,
   TouchableOpacity,
-  TextInput,
+  Text,
+  KeyboardAvoidingView,
+  Platform,
   Keyboard,
-  TouchableWithoutFeedback,
 } from "react-native";
 import { colors } from "../../components/Colors";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import MapView, { Marker } from "react-native-maps";
+import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import MapViewDirections from "react-native-maps-directions";
+import MapStyle from "./MapStyle.json";
 
 const MapScreen = ({ navigation }) => {
+  const [origin, setOrigin] = useState(null);
+  const [destination, setDestination] = useState(null);
+  const [keyboardOpen, setKeyboardOpen] = useState(false);
+
+  const handleOriginSelect = (data, details) => {
+    setOrigin({
+      latitude: details.geometry.location.lat,
+      longitude: details.geometry.location.lng,
+    });
+  };
+
+  const handleDestinationSelect = (data, details) => {
+    setDestination({
+      latitude: details.geometry.location.lat,
+      longitude: details.geometry.location.lng,
+    });
+  };
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      () => {
+        setKeyboardOpen(true);
+      }
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      () => {
+        setKeyboardOpen(false);
+      }
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
   return (
-    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : null}
+    >
       <View style={styles.accountContainer}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Icon name="chevron-left" size={40} color={colors.secondary} />
-        </TouchableOpacity>
+        <View style={styles.iconContainer}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Icon name="chevron-left" size={40} color={colors.secondary} />
+          </TouchableOpacity>
+        </View>
+
+        <View style={{ height: keyboardOpen ? "50%" : "70%" }}>
+          <MapView
+            style={{ height: "100%" }}
+            initialRegion={{
+              latitude: 37.78825,
+              longitude: -122.4324,
+              latitudeDelta: 0.0922,
+              longitudeDelta: 0.0421,
+            }}
+            customMapStyle={MapStyle}
+          >
+            {origin && (
+              <Marker
+                coordinate={origin}
+                title="Origin"
+                description="Origin Description"
+                pinColor="green"
+              />
+            )}
+
+            {destination && (
+              <Marker
+                coordinate={destination}
+                title="Destination"
+                description="Destination Description"
+                pinColor="red"
+              />
+            )}
+
+            {origin && destination && (
+              <MapViewDirections
+                origin={origin}
+                destination={destination}
+                apikey={"YOUR_GOOGLE_API_KEY"}
+                strokeWidth={3}
+                strokeColor="blue"
+              />
+            )}
+          </MapView>
+        </View>
+        <View
+          style={{
+            ...styles.autocompleteContainer,
+            height: keyboardOpen ? "42%" : "30%",
+          }}
+        >
+          <View>
+            <Text style={styles.text}>FROM</Text>
+            <GooglePlacesAutocomplete
+              placeholder="Enter Pickup Location"
+              onPress={handleOriginSelect}
+              query={{
+                key: "YOUR_GOOGLE_API_KEY",
+                language: "en",
+              }}
+              styles={{
+                textInputContainer: {
+                  backgroundColor: "red", // Customize the background color
+                  borderColor: "green", // Customize the border color
+                  borderWidth: 1, // Add a border
+                },
+                textInput: {
+                  color: "#5d5d5d",
+                  fontSize: 16,
+                },
+                predefinedPlacesDescription: {
+                  color: "#1faadb",
+                },
+              }}
+            />
+          </View>
+          <View>
+            <Text style={styles.text}>TO</Text>
+            <GooglePlacesAutocomplete
+              placeholder="Enter Delivery Location"
+              minLength={2}
+              autoFocus={false}
+              returnKeyType={"default"}
+              fetchDetails={true}
+              styles={{
+                textInputContainer: {
+                  backgroundColor: "grey",
+                },
+                textInput: {
+                  color: "#5d5d5d",
+                  fontSize: 16,
+                },
+                predefinedPlacesDescription: {
+                  color: "#1faadb",
+                },
+              }}
+            />
+          </View>
+          <TouchableOpacity style={styles.confirmButton}>
+            <Text style={styles.confirmButtonText}>CONFIRM PICKUP</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -31,7 +174,41 @@ const styles = StyleSheet.create({
     borderTopWidth: 5,
     borderTopColor: colors.opaque,
     backgroundColor: colors.primary,
-    paddingTop: 5,
+  },
+  iconContainer: {
+    backgroundColor: "rgba(0, 0, 0, 0.3)",
+    width: 45,
+    height: 45,
+    borderRadius: 30,
+    alignItems: "center",
+    justifyContent: "center",
+    position: "absolute",
+    top: 10,
+    left: 10,
+    zIndex: 1,
+  },
+  autocompleteContainer: {
+    paddingTop: 10,
+    paddingHorizontal: 10,
+    justifyContent: "space-between",
+  },
+  text: {
+    color: colors.secondary,
+    marginBottom: 3,
+    fontWeight: "bold",
+  },
+  confirmButton: {
+    backgroundColor: colors.blue,
+    padding: 15,
+    borderRadius: 5,
+    alignItems: "center",
+    marginTop: 5,
+    marginBottom: 15,
+  },
+  confirmButtonText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: colors.secondary,
   },
 });
 

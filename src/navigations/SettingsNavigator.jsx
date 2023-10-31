@@ -8,7 +8,12 @@ const Stack = createStackNavigator();
 
 const SettingsNavigator = () => {
   return (
-    <Stack.Navigator initialRouteName="SettingsSreen">
+    <Stack.Navigator
+      initialRouteName="SettingsSreen"
+      screenOptions={{
+        presentation: "modal",
+      }}
+    >
       <Stack.Screen
         name="SettingsScreen"
         component={SettingsScreen}

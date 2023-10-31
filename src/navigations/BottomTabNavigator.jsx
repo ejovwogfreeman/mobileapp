@@ -1,5 +1,4 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import HomeScreen from "../screens/home/HomeScreen";
 import ServiceScreen from "../screens/home/ServiceScreen";
 import ActivityScreen from "../screens/home/ActivityScreen";
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -15,6 +14,7 @@ const BottomTabNavigator = () => {
   return (
     <Tab.Navigator
       style={styles.tabStyle}
+      initialRouteName="Home"
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarStyle: {
@@ -44,15 +44,23 @@ const BottomTabNavigator = () => {
       <Tab.Screen
         name="Home"
         component={HomeNavigator}
-        options={{ headerShown: false }}
+        options={({ route }) => ({
+          tabBarStyle: {
+            display: getTabBarVisibility(route),
+            backgroundColor: colors.primary,
+            paddingTop: 10,
+            borderTopColor: colors.opaque,
+            borderTopWidth: 5,
+          },
+        })}
       />
       <Tab.Screen
-        name="Service"
+        name="Service" // Make sure the name matches your screen name
         component={ServiceScreen}
         options={{ headerShown: false }}
       />
       <Tab.Screen
-        name="Activity"
+        name="Activity" // Make sure the name matches your screen name
         component={ActivityScreen}
         options={{ headerShown: false }}
       />
@@ -77,9 +85,9 @@ const getTabBarVisibility = (route) => {
   const routeName = getFocusedRouteNameFromRoute(route);
 
   if (
-    routeName === "Family" ||
-    routeName === "Settings" ||
-    routeName === "Messages"
+    routeName === "SettingsNav" ||
+    routeName === "Messages" ||
+    routeName === "MapScreen"
   ) {
     return "none";
   }
