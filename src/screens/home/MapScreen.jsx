@@ -122,18 +122,16 @@ const MapScreen = ({ navigation }) => {
                 language: "en",
               }}
               styles={{
-                textInputContainer: {
-                  backgroundColor: "red", // Customize the background color
-                  borderColor: "green", // Customize the border color
-                  borderWidth: 1, // Add a border
-                },
                 textInput: {
-                  color: "#5d5d5d",
+                  color: colors.secondary,
                   fontSize: 16,
+                  backgroundColor: "rgba(256,256,256,0.05)",
+                  borderWidth: 1,
+                  borderColor: colors.opaque,
                 },
-                predefinedPlacesDescription: {
-                  color: "#1faadb",
-                },
+              }}
+              textInputProps={{
+                placeholderTextColor: colors.opaque,
               }}
             />
           </View>
@@ -141,21 +139,22 @@ const MapScreen = ({ navigation }) => {
             <Text style={styles.text}>TO</Text>
             <GooglePlacesAutocomplete
               placeholder="Enter Delivery Location"
-              minLength={2}
-              autoFocus={false}
-              returnKeyType={"default"}
-              fetchDetails={true}
+              onPress={handleDestinationSelect}
+              query={{
+                key: "YOUR_GOOGLE_API_KEY",
+                language: "en",
+              }}
               styles={{
-                textInputContainer: {
-                  backgroundColor: "grey",
-                },
                 textInput: {
-                  color: "#5d5d5d",
+                  color: colors.secondary,
                   fontSize: 16,
+                  backgroundColor: "rgba(256,256,256,0.05)",
+                  borderWidth: 1,
+                  borderColor: colors.opaque,
                 },
-                predefinedPlacesDescription: {
-                  color: "#1faadb",
-                },
+              }}
+              textInputProps={{
+                placeholderTextColor: colors.opaque,
               }}
             />
           </View>
