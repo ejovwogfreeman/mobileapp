@@ -158,7 +158,10 @@ const MapScreen = ({ navigation }) => {
               }}
             />
           </View>
-          <TouchableOpacity style={styles.confirmButton}>
+          <TouchableOpacity
+            style={styles.confirmButton}
+            onPress={() => navigation.navigate("Activity")}
+          >
             <Text style={styles.confirmButtonText}>CONFIRM PICKUP</Text>
           </TouchableOpacity>
         </View>

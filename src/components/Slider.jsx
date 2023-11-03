@@ -8,6 +8,7 @@ import {
   Animated,
   Easing,
 } from "react-native";
+import { colors } from "./Colors";
 
 const Slider = () => {
   const types = [
@@ -90,6 +91,9 @@ const Slider = () => {
       style={{
         paddingLeft: 20,
         paddingRight: 20,
+        backgroundColor: colors.secondary,
+        height: 200,
+        marginTop: -80,
       }}
     >
       <ScrollView
@@ -124,7 +128,7 @@ const styles = StyleSheet.create({
     margin: 25,
     marginLeft: 0,
     marginRight: 18,
-    marginTop: 18,
+    marginTop: 100,
   },
 });
 

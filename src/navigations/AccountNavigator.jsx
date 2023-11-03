@@ -1,6 +1,7 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import AccountScreen from "../screens/home/AccountScreen";
 import MessageScreen from "../screens/account/MessageScreen";
+import ChatScreen from "../screens/account/ChatScreen";
 import SettingsNavigator from "./SettingsNavigator";
 
 const Stack = createStackNavigator();
@@ -26,6 +27,11 @@ const AccountNavigator = () => {
       <Stack.Screen
         name="Messages"
         component={MessageScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ChatScreen"
+        component={ChatScreen}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

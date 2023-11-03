@@ -21,7 +21,7 @@ const BottomTabNavigator = () => {
           backgroundColor: colors.primary,
           paddingTop: 10,
           borderTopColor: colors.opaque,
-          borderTopWidth: 5,
+          borderTopWidth: 1,
         },
         tabBarActiveTintColor: colors.white,
         tabBarInactiveTintColor: colors.opaque,
@@ -50,17 +50,17 @@ const BottomTabNavigator = () => {
             backgroundColor: colors.primary,
             paddingTop: 10,
             borderTopColor: colors.opaque,
-            borderTopWidth: 5,
+            borderTopWidth: 1,
           },
         })}
       />
       <Tab.Screen
-        name="Service" // Make sure the name matches your screen name
+        name="Service"
         component={ServiceScreen}
         options={{ headerShown: false }}
       />
       <Tab.Screen
-        name="Activity" // Make sure the name matches your screen name
+        name="Activity"
         component={ActivityScreen}
         options={{ headerShown: false }}
       />
@@ -73,7 +73,7 @@ const BottomTabNavigator = () => {
             backgroundColor: colors.primary,
             paddingTop: 10,
             borderTopColor: colors.opaque,
-            borderTopWidth: 5,
+            borderTopWidth: 1,
           },
         })}
       />
@@ -87,7 +87,8 @@ const getTabBarVisibility = (route) => {
   if (
     routeName === "SettingsNav" ||
     routeName === "Messages" ||
-    routeName === "MapScreen"
+    routeName === "MapScreen" ||
+    routeName === "ChatScreen"
   ) {
     return "none";
   }

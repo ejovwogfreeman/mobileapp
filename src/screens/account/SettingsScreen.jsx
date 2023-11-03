@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 10,
     paddingHorizontal: 16,
     paddingVertical: 16,
-    height: "90%",
+    height: "100%",
   },
   closeButton: {
     alignItems: "flex-end",
