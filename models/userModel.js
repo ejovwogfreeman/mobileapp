@@ -23,6 +23,17 @@ const userSchema = new mongoose.Schema(
     balance: {
       type: Number,
     },
+    accountType: {
+      type: String,
+      enum: ["user", "rider"],
+    },
+    location: {
+      type: {
+        type: String,
+        enum: ["Point"], // Specify the geospatial type as Point
+        coordinates: [Number], // Specify an array of coordinates [longitude, latitude]
+      },
+    },
   },
   { timestamps: true }
 );

@@ -1,8 +1,6 @@
 const bcrypt = require("bcryptjs");
 const User = require("../models/userModel");
-const Product = require("../models/productModel");
-const Cart = require("../models/cartModel");
-const Order = require("../models/orderModel");
+const Ride = require("../models/rideModel");
 const sendEmail = require("../middlewares/emailMiddleware");
 const accessToken = require("../middlewares/accessTokenMiddleware");
 
@@ -161,261 +159,50 @@ const resetPassword = async (req, res) => {
   return res.status(200).json({ message: "Password reset is successful" });
 };
 
-/////////////////////////////
-/////////ADD TO CART/////////
-/////////////////////////////
-const addToCart = async (req, res) => {
+/////////////////////////////////
+///////////BOOK A RIDE///////////
+/////////////////////////////////
+const bookRide = async (req, res) => {
+  const { passengerId, driverId } = req.body;
+
   try {
-    const productId = req.params.productId;
-    const userId = req.user._id;
-
-    const cart = await Cart.findOne({ user: userId });
-
-    if (!cart) {
-      return res.status(404).json({ message: "Cart not found" });
-    }
-
-    const isProductInCart = cart.items.some(
-      (item) => item.product.toString() === productId
-    );
-
-    if (isProductInCart) {
-      return res
-        .status(400)
-        .json({ message: "Product already exists in the cart" });
-    }
-
-    const product = await Product.findById(productId);
-
-    if (!product) {
-      return res.status(404).json({ message: "Product not found" });
-    }
-
-    cart.items.push({ product: productId, quantity: 1 });
-
-    await cart.save();
-
-    res.status(201).json({ message: "Product added to cart", cart });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
-};
-
-/////////////////////////////
-//////REMOVE FROM CART///////
-/////////////////////////////
-const removeFromCart = async (req, res) => {
-  try {
-    const productId = req.params.productId;
-    const userId = req.user._id;
-
-    const cart = await Cart.findOne({ user: userId });
-
-    if (!cart) {
-      return res.status(404).json({ message: "Cart not found" });
-    }
-
-    const itemIndex = cart.items.findIndex(
-      (item) => item.product.toString() === productId
-    );
-
-    if (itemIndex === -1) {
-      return res.status(404).json({ message: "Product not found in the cart" });
-    }
-
-    cart.items.splice(itemIndex, 1);
-
-    await cart.save();
-
-    res.status(200).json({ message: "Product removed from cart", cart });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
-};
-
-///////////////////////////////////////
-//////INCREASE CART ITEM QUANTITY//////
-///////////////////////////////////////
-const increaseCartItemQuantity = async (req, res) => {
-  try {
-    const productId = req.params.productId;
-    const userId = req.user._id;
-    const cart = await Cart.findOne({ user: userId });
-
-    if (!cart) {
-      return res.status(404).json({ message: "Cart not found" });
-    }
-
-    const cartItem = cart.items.find(
-      (item) => item.product.toString() === productId
-    );
-
-    if (!cartItem) {
-      return res.status(404).json({ message: "Product not found in the cart" });
-    }
-
-    cartItem.quantity += 1;
-
-    await cart.save();
-
-    res.status(200).json({ message: "Cart item quantity increased", cart });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
-};
-
-///////////////////////////////////////
-//////DECREASE CART ITEM QUANTITY//////
-///////////////////////////////////////
-const decreaseCartItemQuantity = async (req, res) => {
-  try {
-    const productId = req.params.productId;
-    const userId = req.user._id;
-
-    const cart = await Cart.findOne({ user: userId });
-
-    if (!cart) {
-      return res.status(404).json({ message: "Cart not found" });
-    }
-
-    const cartItem = cart.items.find(
-      (item) => item.product.toString() === productId
-    );
-
-    if (!cartItem) {
-      return res.status(404).json({ message: "Product not found in the cart" });
-    }
-
-    if (cartItem.quantity > 1) {
-      cartItem.quantity -= 1;
-    }
-
-    await cart.save();
-
-    res.status(200).json({ message: "Cart item quantity decreased", cart });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
-};
-
-////////////////////////
-//////CLEAR CART////////
-////////////////////////
-const clearCart = async (req, res) => {
-  try {
-    const userId = req.user._id;
-    const cart = await Cart.findOne({ user: userId });
-
-    if (!cart) {
-      return res.status(404).json({ message: "Cart not found" });
-    }
-
-    cart.items = [];
-
-    await cart.save();
-
-    res.status(200).json({ message: "Cart cleared", cart });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
-};
-
-//////////////////////////
-//////CREATE ORDER////////
-//////////////////////////
-const createOrder = async (req, res) => {
-  try {
-    const userId = req.user._id;
-
-    const cart = await Cart.findOne({ user: userId });
-
-    if (!cart) {
-      return res.status(404).json({ message: "Cart not found" });
-    }
-
-    const order = new Order({
-      user: userId,
-      items: cart.items,
-      total: cart.items.reduce(
-        (total, item) => total + item.product.price * item.quantity,
-        0
-      ),
+    const newRide = new Ride({
+      passenger: passengerId,
+      driver: driverId,
+      status: "pending",
     });
 
-    await order.save();
+    await newRide.save();
 
-    cart.items = [];
-    await cart.save();
-
-    res.status(201).json({ message: "Order created successfully", order });
+    return res.status(201).json(newRide);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Internal Server Error" });
+    return res.status(500).json({ error: "Failed to book a ride" });
   }
 };
 
-////////////////////////
-//////CANCEL ORDER//////
-////////////////////////
-const cancelOrder = async (req, res) => {
-  try {
-    const orderId = req.params.orderId;
-    const order = await Order.findById(orderId);
+/////////////////////////////////
+//////////CANCEL A RIDE//////////
+/////////////////////////////////
+const cancelRide = async (req, res) => {
+  const { rideId } = req.params;
 
-    if (!order) {
-      return res.status(404).json({ message: "Order not found" });
+  try {
+    const ride = await Ride.findById(rideId);
+
+    if (!ride) {
+      return res.status(404).json({ error: "Ride not found" });
     }
 
-    if (order.status !== "Pending") {
-      return res.status(400).json({ message: "Order cannot be canceled" });
+    if (ride.status === "completed") {
+      return res.status(400).json({ error: "Cannot cancel a completed ride" });
     }
 
-    order.status = "Canceled";
+    ride.status = "canceled";
+    await ride.save();
 
-    await order.save();
-
-    res.status(200).json({ message: "Order canceled successfully", order });
+    return res.status(200).json({ message: "Ride canceled successfully" });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
-};
-
-/////////////////////////////
-////////GET ALL ORDERS///////
-/////////////////////////////
-const getAllOrders = async (req, res) => {
-  try {
-    const loggedInUserId = req.user.id;
-    const orders = await Order.find({ user: loggedInUserId });
-    res.status(200).json({ orders });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
-};
-
-/////////////////////////////
-////////GET SINGLE ORDER/////
-/////////////////////////////
-const getSingleOrder = async (req, res) => {
-  const orderId = req.params.id;
-  try {
-    const loggedInUserId = req.user.id;
-    const order = await Order.findOne({ _id: orderId, user: loggedInUserId });
-    if (!order) {
-      res.status(404).json({ message: "Order not found" });
-      return;
-    }
-    res.status(200).json({ order });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Internal Server Error" });
+    return res.status(500).json({ error: "Failed to cancel the ride" });
   }
 };
 
@@ -425,13 +212,6 @@ module.exports = {
   changePassword,
   forgotPasword,
   resetPassword,
-  addToCart,
-  removeFromCart,
-  increaseCartItemQuantity,
-  decreaseCartItemQuantity,
-  clearCart,
-  createOrder,
-  cancelOrder,
-  getAllOrders,
-  getSingleOrder,
+  bookRide,
+  cancelRide,
 };
