@@ -272,7 +272,7 @@ const styles = StyleSheet.create({
   userChat: {
     flexDirection: "row",
     alignItems: "center",
-    paddingBottom: 10,
+    paddingBottom: 20,
     borderBottomWidth: 1,
     borderBottomColor: colors.opaque,
     backgroundColor: colors.primary,
