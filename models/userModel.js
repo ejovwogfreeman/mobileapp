@@ -30,8 +30,8 @@ const userSchema = new mongoose.Schema(
     location: {
       type: {
         type: String,
-        enum: ["Point"], // Specify the geospatial type as Point
-        coordinates: [Number], // Specify an array of coordinates [longitude, latitude]
+        enum: ["Point"],
+        coordinates: [Number],
       },
     },
   },
