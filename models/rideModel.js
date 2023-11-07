@@ -19,18 +19,25 @@ const rideSchema = new mongoose.Schema(
       type: {
         type: String,
         enum: ["Point"],
-        coordinates: [Number],
+        required: true,
       },
-      required: true,
+      coordinates: {
+        type: [Number],
+        required: true,
+      },
     },
     dropoffLocation: {
       type: {
         type: String,
         enum: ["Point"],
-        coordinates: [Number],
+        required: true,
       },
-      required: true,
+      coordinates: {
+        type: [Number],
+        required: true,
+      },
     },
+
     fare: {
       type: Number,
       required: true,
@@ -45,6 +52,7 @@ const rideSchema = new mongoose.Schema(
     },
     endTime: {
       type: Date,
+      required: true,
     },
   },
   { timestamps: true }
