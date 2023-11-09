@@ -1,6 +1,6 @@
 const bcrypt = require("bcryptjs");
 const User = require("../models/userModel");
-const sendEmail = require("../middlewares/emailMiddleware");
+// const sendEmail = require("../middlewares/emailMiddleware");
 const accessToken = require("../middlewares/accessTokenMiddleware");
 
 /////////////////////////////
@@ -36,7 +36,7 @@ const registerUser = async (req, res) => {
       const { password, ...others } = user._doc;
       const token = accessToken(user);
 
-      await sendEmail(email, "Welcome On Board", "html/register.html");
+      // await sendEmail(email, "Welcome On Board", "html/register.html");
 
       return res.status(200).json({
         ...others,
@@ -71,7 +71,7 @@ const loginUser = async (req, res) => {
             token: accessToken(user),
           });
 
-          await sendEmail(email, "Login Successful", "html/login.html");
+          // await sendEmail(email, "Login Successful", "html/login.html");
         } else {
           res.status(400).json({ message: "passwords do not match" });
         }

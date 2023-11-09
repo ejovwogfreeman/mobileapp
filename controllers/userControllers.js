@@ -1,7 +1,7 @@
 const bcrypt = require("bcryptjs");
 const User = require("../models/userModel");
 const Ride = require("../models/rideModel");
-const sendEmail = require("../middlewares/emailMiddleware");
+// const sendEmail = require("../middlewares/emailMiddleware");
 const accessToken = require("../middlewares/accessTokenMiddleware");
 
 /////////////////////////////
@@ -49,7 +49,7 @@ const updateUser = async (req, res) => {
     const user = await User.findById(userId);
     const email = user.email;
     console.log(email);
-    await sendEmail(email, "Profile Updated Successfully", "html/update.html");
+    // await sendEmail(email, "Profile Updated Successfully", "html/update.html");
 
     res.status(200).json({ message: "Profile Updated Successfully" });
   } catch (error) {
@@ -86,11 +86,11 @@ const changePassword = async (req, res) => {
 
       const email = user.email;
 
-      await sendEmail(
-        email,
-        "Password Changed Successfully",
-        "html/change_password.html"
-      );
+      // await sendEmail(
+      //   email,
+      //   "Password Changed Successfully",
+      //   "html/change_password.html"
+      // );
 
       res.status(200).json({ message: "Password Changed Successfully" });
     } else {
@@ -108,7 +108,7 @@ const forgotPasword = async (req, res) => {
   const user = await User.findOne({ email });
 
   if (user) {
-    await sendEmail(email, "Password Reset", "html/reset.html");
+    // await sendEmail(email, "Password Reset", "html/reset.html");
     res.status(200).json({ message: "An email has been sent to you" });
   } else {
     res.status(400).json({
@@ -150,11 +150,11 @@ const resetPassword = async (req, res) => {
     return res.status(500).json({ message: "Password update failed" });
   }
 
-  await sendEmail(
-    email,
-    "Password Reset Successful",
-    "html/reset_password_successful.html"
-  );
+  // await sendEmail(
+  //   email,
+  //   "Password Reset Successful",
+  //   "html/reset_password_successful.html"
+  // );
 
   return res.status(200).json({ message: "Password reset is successful" });
 };
