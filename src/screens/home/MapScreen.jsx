@@ -160,9 +160,9 @@ const MapScreen = ({ navigation }) => {
           </View>
           <TouchableOpacity
             style={styles.confirmButton}
-            onPress={() => navigation.navigate("Activity")}
+            onPress={() => navigation.navigate("ChooseRider")}
           >
-            <Text style={styles.confirmButtonText}>CONFIRM PICKUP</Text>
+            <Text style={styles.confirmButtonText}>CHOOSE RIDER</Text>
           </TouchableOpacity>
         </View>
       </View>

@@ -77,11 +77,17 @@ const AccountScreen = ({ navigation }) => {
           <Icon name="message" size={30} color={colors.secondary} />
           <Text style={styles.actionText}>Messages</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.actionIcon}>
+        <TouchableOpacity
+          style={styles.actionIcon}
+          onPress={() => navigation.navigate("EarnScreen")}
+        >
           <Icon name="delivery-dining" size={30} color={colors.secondary} />
           <Text style={styles.actionText}>Earn by Delivering</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.actionIcon}>
+        <TouchableOpacity
+          style={styles.actionIcon}
+          onPress={() => navigation.navigate("LegalScreen")}
+        >
           <Icon name="policy" size={30} color={colors.secondary} />
           <Text style={styles.actionText}>Legal</Text>
         </TouchableOpacity>

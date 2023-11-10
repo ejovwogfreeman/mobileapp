@@ -209,7 +209,10 @@ const getTabBarVisibility = (route) => {
     routeName === "SettingsNav" ||
     routeName === "Messages" ||
     routeName === "MapScreen" ||
-    routeName === "ChatScreen"
+    routeName === "ChatScreen" ||
+    routeName === "EarnScreen" ||
+    routeName === "LegalScreen" ||
+    routeName === "ChooseRider"
   ) {
     return "none";
   }
