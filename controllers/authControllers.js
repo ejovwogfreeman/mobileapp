@@ -8,17 +8,20 @@ const accessToken = require("../middlewares/accessTokenMiddleware");
 /////////////////////////////
 
 const registerUser = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, accountType } = req.body;
   let hashedPassword = null;
 
   try {
-    if (!email || !password) {
+    if (!email || !password || !accountType) {
       return res.status(400).json({ message: "Please fill all fields" });
     }
 
     const userExists = await User.findOne({ email });
     if (userExists) {
-      return res.status(400).json({ message: "User already exists" });
+      console.log("user exists");
+      return res
+        .status(400)
+        .json({ message: "A user with this email already exists." });
     }
 
     const salt = await bcrypt.genSalt(10);
@@ -73,10 +76,14 @@ const loginUser = async (req, res) => {
 
           // await sendEmail(email, "Login Successful", "html/login.html");
         } else {
-          res.status(400).json({ message: "passwords do not match" });
+          res
+            .status(400)
+            .json({ message: "Invalid password, Please try again." });
         }
       } else {
-        res.status(400).json({ message: "User not found" });
+        res
+          .status(400)
+          .json({ message: "A user with this email doesn't exist." });
       }
     }
   } catch (err) {
