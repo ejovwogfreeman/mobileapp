@@ -10,16 +10,56 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   ImageBackground,
+  ActivityIndicator,
 } from "react-native";
 import { colors } from "../../components/Colors";
 import Icon from "react-native-vector-icons/FontAwesome";
 import CustomModal from "../../components/CustomModal";
+import { registerUser } from "../../../api";
+import { Toast } from "toastify-react-native";
 
 const RegisterScreen = ({ navigation }) => {
-  const handleLogin = () => {
-    // Handle login logic here
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [accountType, setAccountType] = useState("Select Account Type");
+  const [loading, setLoading] = useState(false);
+
+  const handleRegister = async () => {
+    setLoading(true);
+
+    if (!email || !password) {
+      setLoading(false);
+      return Toast.error("Please fill all fields.");
+    }
+
+    if (accountType === "Select Account Type") {
+      setAccountType("user");
+    }
+
+    if (password.length < 8) {
+      setLoading(false);
+      return Toast.error("Password must be at least 8 characters long.");
+    }
+
+    if (password !== confirmPassword) {
+      setLoading(false);
+      return Toast.error("Passwords do not match");
+    }
+
+    try {
+      const userRegistered = await registerUser(email, password, accountType);
+      if (userRegistered) {
+        setLoading(false);
+        navigation.navigate("Login");
+        return Toast.success("Registration Successful.");
+      }
+    } catch (err) {
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
   };
-  const [selectedValue, setSelectedValue] = useState("Select Account Type");
 
   const handlePickerPress = () => {
     setModalVisible(true);
@@ -46,15 +86,15 @@ const RegisterScreen = ({ navigation }) => {
               onPress={handlePickerPress}
               style={styles.pickerText}
             >
-              <Text style={styles.pick}>{selectedValue}</Text>
+              <Text style={styles.pick}>{accountType}</Text>
               <Icon name="chevron-down" size={20} color={colors.secondary} />
             </TouchableOpacity>
             {modalVisible && (
               <CustomModal
-                selectedValue={selectedValue}
+                selectedValue={accountType}
                 onClose={(value) => {
                   setModalVisible(false);
-                  setSelectedValue(value);
+                  setAccountType(value);
                 }}
               />
             )}
@@ -70,6 +110,8 @@ const RegisterScreen = ({ navigation }) => {
                 placeholderTextColor={colors.opaque}
                 style={styles.input}
                 placeholder="Email"
+                value={email}
+                onChangeText={(text) => setEmail(text)}
               />
             </View>
             <Text style={styles.label}>Password</Text>
@@ -85,6 +127,8 @@ const RegisterScreen = ({ navigation }) => {
                 style={styles.input}
                 placeholder="Password"
                 secureTextEntry={true}
+                value={password}
+                onChangeText={(text) => setPassword(text)}
               />
             </View>
             <Text style={styles.label}>Confirm Password</Text>
@@ -98,12 +142,24 @@ const RegisterScreen = ({ navigation }) => {
               <TextInput
                 placeholderTextColor={colors.opaque}
                 style={styles.input}
-                placeholder="Password"
+                placeholder="Confirm Password"
                 secureTextEntry={true}
+                value={confirmPassword}
+                onChangeText={(text) => setConfirmPassword(text)}
               />
             </View>
-            <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-              <Text style={styles.loginButtonText}>REGISTER</Text>
+            <TouchableOpacity
+              style={[
+                styles.loginButton,
+                { backgroundColor: loading ? "#415bf2" : colors.blue },
+              ]}
+              onPress={handleRegister}
+              disabled={loading}
+            >
+              <Text style={styles.loginButtonText}>
+                {loading && <ActivityIndicator style={{ marginRight: 10 }} />}
+                {loading ? "REGISTERING..." : "REGISTER"}
+              </Text>
             </TouchableOpacity>
             <View style={styles.newSec}>
               <Text style={styles.text}>Already have an account?</Text>

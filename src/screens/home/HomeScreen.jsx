@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { View, StyleSheet, ScrollView, ImageBackground } from "react-native";
 import Searchbar from "../../components/Searchbar";
 import { colors } from "../../components/Colors";
@@ -7,8 +7,11 @@ import Carousel from "../../components/Carousel";
 import Slider from "../../components/Slider";
 import Services from "../../components/Services";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { useUser } from "../../../userContext";
 
 const HomeScreen = ({ navigation }) => {
+  const { user } = useUser();
+
   return (
     <View style={styles.container}>
       <ScrollView>
@@ -27,6 +30,7 @@ const HomeScreen = ({ navigation }) => {
           </ImageBackground>
         </View>
         <Slider />
+        {/* {user.email} */}
         <Carousel />
         <Services />
       </ScrollView>

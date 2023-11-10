@@ -9,15 +9,30 @@ import {
   ScrollView,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import { useUser } from "../../../userContext";
 
 const AccountScreen = ({ navigation }) => {
+  const { user, logout } = useUser();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigation.navigate("Login");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
+
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
       style={styles.accountContainer}
     >
       <View style={styles.userInfo}>
-        <Text style={styles.username}>Ejovwo Godbless</Text>
+        <View>
+          <Text style={styles.username}>@{user && user.username}</Text>
+          <Text style={styles.email}>{user && user.email}</Text>
+        </View>
         <Image
           source={require("../../../assets/defaultprofile.jpg")}
           style={styles.image}
@@ -70,10 +85,7 @@ const AccountScreen = ({ navigation }) => {
           <Icon name="policy" size={30} color={colors.secondary} />
           <Text style={styles.actionText}>Legal</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.actionIcon}
-          onPress={() => navigation.navigate("Login")}
-        >
+        <TouchableOpacity style={styles.actionIcon} onPress={handleLogout}>
           <Icon name="logout" size={30} color={colors.secondary} />
           <Text style={styles.actionText}>Logout</Text>
         </TouchableOpacity>
@@ -94,10 +106,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   username: {
-    fontSize: 35,
+    fontSize: 20,
     color: colors.white,
     fontWeight: "bold",
-    marginBottom: 20,
+  },
+  email: {
+    fontSize: 20,
+    color: colors.white,
+    // fontWeight: "bold",
   },
   image: {
     width: 80,

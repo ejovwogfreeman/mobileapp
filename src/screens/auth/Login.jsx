@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -10,13 +10,39 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   ImageBackground,
+  ActivityIndicator,
 } from "react-native";
 import { colors } from "../../components/Colors";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import { Toast } from "toastify-react-native";
+import { useUser } from "../../../userContext";
 
 const LoginScreen = ({ navigation }) => {
-  const handleLogin = () => {
-    navigation.navigate("HomeScreen");
+  const { login } = useUser();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleLogin = async () => {
+    setLoading(true);
+
+    if (!email || !password) {
+      setLoading(false);
+      return Toast.error("Please fill all fields.");
+    }
+
+    try {
+      const usreLoggedIn = await login(email, password);
+      if (usreLoggedIn) {
+        setLoading(false);
+        navigation.navigate("HomeScreen");
+        return Toast.success("Login Successful.");
+      }
+    } catch (err) {
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -45,6 +71,8 @@ const LoginScreen = ({ navigation }) => {
                 placeholderTextColor={colors.opaque}
                 style={styles.input}
                 placeholder="Email"
+                value={email}
+                onChangeText={(text) => setEmail(text)}
               />
             </View>
             <Text style={styles.label}>Password</Text>
@@ -60,10 +88,22 @@ const LoginScreen = ({ navigation }) => {
                 style={styles.input}
                 placeholder="Password"
                 secureTextEntry={true}
+                value={password}
+                onChangeText={(text) => setPassword(text)}
               />
             </View>
-            <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-              <Text style={styles.loginButtonText}>LOGIN</Text>
+            <TouchableOpacity
+              style={[
+                styles.loginButton,
+                { backgroundColor: loading ? "#415bf2" : colors.blue },
+              ]}
+              onPress={handleLogin}
+              disabled={loading}
+            >
+              <Text style={styles.loginButtonText}>
+                {loading && <ActivityIndicator style={{ marginRight: 10 }} />}
+                {loading ? "LOGGING IN..." : "LOGIN"}
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.registerButton}

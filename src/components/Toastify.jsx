@@ -5,7 +5,7 @@ const Toastify = () => {
   return (
     <ToastManager
       style={{
-        marginTop: -50,
+        marginTop: -20,
         height: 100,
         width: "100%",
         flexWrap: "wrap",

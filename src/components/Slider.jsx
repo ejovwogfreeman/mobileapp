@@ -92,8 +92,8 @@ const Slider = () => {
         paddingLeft: 20,
         paddingRight: 20,
         backgroundColor: colors.secondary,
-        height: 200,
-        marginTop: -80,
+        height: 220,
+        marginTop: -100,
       }}
     >
       <ScrollView
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
     margin: 25,
     marginLeft: 0,
     marginRight: 18,
-    marginTop: 100,
+    marginTop: 120,
   },
 });
 

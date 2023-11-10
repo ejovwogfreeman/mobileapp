@@ -13,13 +13,13 @@ const CustomModal = ({ onClose }) => {
 
           <TouchableOpacity
             style={styles.option}
-            onPress={() => handleClose("USER")}
+            onPress={() => handleClose("user")}
           >
             <Text>USER</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.option}
-            onPress={() => handleClose("RIDER")}
+            onPress={() => handleClose("rider")}
           >
             <Text>RIDER</Text>
           </TouchableOpacity>
