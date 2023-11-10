@@ -34,7 +34,7 @@
 //           backgroundColor: colors.primary,
 //           paddingTop: 10,
 //           borderTopColor: colors.opaque,
-//           borderTopWidth: 1,
+//           borderTopWidth: 2,
 //         },
 //         tabBarActiveTintColor: colors.white,
 //         tabBarInactiveTintColor: colors.opaque,
@@ -64,7 +64,7 @@
 //             backgroundColor: colors.primary,
 //             paddingTop: 10,
 //             borderTopColor: colors.opaque,
-//             borderTopWidth: 1,
+//             borderTopWidth: 2,
 //           },
 //         })}
 //       />
@@ -87,7 +87,7 @@
 //             backgroundColor: colors.primary,
 //             paddingTop: 10,
 //             borderTopColor: colors.opaque,
-//             borderTopWidth: 1,
+//             borderTopWidth: 2,
 //           },
 //         })}
 //       />
@@ -142,7 +142,7 @@ const BottomTabNavigator = () => {
           backgroundColor: colors.primary,
           paddingTop: 10,
           borderTopColor: colors.opaque,
-          borderTopWidth: 1,
+          borderTopWidth: 2,
         },
         tabBarActiveTintColor: colors.white,
         tabBarInactiveTintColor: colors.opaque,
@@ -171,7 +171,7 @@ const BottomTabNavigator = () => {
             backgroundColor: colors.primary,
             paddingTop: 10,
             borderTopColor: colors.opaque,
-            borderTopWidth: 1,
+            borderTopWidth: 2,
           },
         })}
       />
@@ -194,7 +194,7 @@ const BottomTabNavigator = () => {
             backgroundColor: colors.primary,
             paddingTop: 10,
             borderTopColor: colors.opaque,
-            borderTopWidth: 1,
+            borderTopWidth: 2,
           },
         })}
       />
