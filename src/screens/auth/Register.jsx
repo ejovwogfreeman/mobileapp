@@ -34,7 +34,8 @@ const RegisterScreen = ({ navigation }) => {
     }
 
     if (accountType === "Select Account Type") {
-      setAccountType("user");
+      setLoading(false);
+      return Toast.error("Please select a valid account type.");
     }
 
     if (password.length < 8) {

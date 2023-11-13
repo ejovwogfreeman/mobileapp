@@ -77,13 +77,24 @@ const AccountScreen = ({ navigation }) => {
           <Icon name="message" size={30} color={colors.secondary} />
           <Text style={styles.actionText}>Messages</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.actionIcon}
-          onPress={() => navigation.navigate("EarnScreen")}
-        >
-          <Icon name="delivery-dining" size={30} color={colors.secondary} />
-          <Text style={styles.actionText}>Earn by Delivering</Text>
-        </TouchableOpacity>
+        {user.accountType !== "rider" && (
+          <TouchableOpacity
+            style={styles.actionIcon}
+            onPress={() => navigation.navigate("EarnScreen")}
+          >
+            <Icon name="delivery-dining" size={30} color={colors.secondary} />
+            <Text style={styles.actionText}>Earn by Delivering</Text>
+          </TouchableOpacity>
+        )}
+        {user.accountType === "rider" && (
+          <TouchableOpacity
+            style={styles.actionIcon}
+            onPress={() => navigation.navigate("EarnScreen")}
+          >
+            <Icon name="delivery-dining" size={30} color={colors.secondary} />
+            <Text style={styles.actionText}>View Trips</Text>
+          </TouchableOpacity>
+        )}
         <TouchableOpacity
           style={styles.actionIcon}
           onPress={() => navigation.navigate("LegalScreen")}

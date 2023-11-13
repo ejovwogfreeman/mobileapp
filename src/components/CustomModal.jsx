@@ -3,7 +3,7 @@ import { View, Text, Modal, TouchableOpacity, StyleSheet } from "react-native";
 
 const CustomModal = ({ onClose }) => {
   const handleClose = (value) => {
-    onClose(value); // Call the onClose callback with the selected value
+    onClose(value);
   };
   return (
     <Modal animationType="slide" transparent={true} visible={true}>
