@@ -33,8 +33,11 @@ const ForgotPassword = ({ navigation }) => {
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.accountContainer}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Icon name="chevron-left" size={40} color={colors.secondary} />
+        <TouchableOpacity
+          style={styles.closeButton}
+          onPress={() => navigation.goBack()}
+        >
+          <Icon name="close" size={30} color={colors.secondary} />
         </TouchableOpacity>
         <View style={styles.userInfo}>
           <Text style={styles.loginText}>BECOME A RIDER</Text>
@@ -78,6 +81,12 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 10,
     backgroundColor: colors.primary,
     paddingTop: 5,
+  },
+  closeButton: {
+    alignItems: "flex-end",
+    padding: 20,
+    paddingTop: 15,
+    paddingBottom: 0,
   },
   userInfo: {
     padding: 20,

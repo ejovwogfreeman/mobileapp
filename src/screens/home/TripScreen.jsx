@@ -1,3 +1,40 @@
+// import React from "react";
+// import { colors } from "../../components/Colors";
+// import { View, Text, StyleSheet } from "react-native";
+
+// const ActivityScreen = () => {
+//   return (
+//     <View style={styles.activityContainer}>
+//       <Text style={styles.bigText}>Trips</Text>
+//       <Text style={styles.smallText}>
+//         You don't have any completed trips yet
+//       </Text>
+//     </View>
+//   );
+// };
+
+// const styles = StyleSheet.create({
+//   activityContainer: {
+//     padding: 20,
+//     backgroundColor: colors.primary,
+//     flex: 1,
+//   },
+//   bigText: {
+//     fontSize: 30,
+//     color: colors.white,
+//     fontWeight: "bold",
+//     marginBottom: 20,
+//   },
+//   smallText: {
+//     fontSize: 20,
+//     color: colors.white,
+//     fontWeight: "bold",
+//     marginBottom: 10,
+//   },
+// });
+
+// export default ActivityScreen;
+
 import React, { useEffect, useRef, useState } from "react";
 import {
   View,
@@ -5,14 +42,13 @@ import {
   TouchableOpacity,
   StyleSheet,
   Animated,
+  FlatList,
+  Image,
 } from "react-native";
 import { colors } from "../../components/Colors";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import { useUser } from "../../../userContext";
 
-const SettingsScreen = ({ navigation }) => {
-  const { user } = useUser();
-
+const TripScreen = ({ navigation }) => {
   const translateY = useRef(new Animated.Value(300)).current;
   const [drawerOpen, setDrawerOpen] = useState(false);
 
@@ -58,46 +94,8 @@ const SettingsScreen = ({ navigation }) => {
         >
           <Icon name="close" size={30} color={colors.secondary} />
         </TouchableOpacity>
-        <View style={styles.menuItem}>
-          <TouchableOpacity
-            onPress={() => navigation.navigate("UpdateProfile")}
-            style={styles.menuButton}
-          >
-            <Text style={styles.menuText}>Update Profile</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => navigation.navigate("AddProfilePic")}
-            style={styles.menuButton}
-          >
-            <Text style={styles.menuText}>Profile Pic</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => navigation.navigate("AddHome")}
-            style={styles.menuButton}
-          >
-            <Text style={styles.menuText}>Add Home</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => navigation.navigate("AddWork")}
-            style={styles.menuButton}
-          >
-            <Text style={styles.menuText}>Add Work</Text>
-          </TouchableOpacity>
-          {user && user.accountType !== "rider" && (
-            <TouchableOpacity
-              onPress={() => navigation.navigate("AddDocument")}
-              style={styles.menuButton}
-            >
-              <Text style={styles.menuText}>Upload Verification Document</Text>
-            </TouchableOpacity>
-          )}
-          <TouchableOpacity
-            onPress={() => navigation.navigate("ChangePassword")}
-            style={styles.menuButton}
-          >
-            <Text style={styles.menuText}>Change Password</Text>
-          </TouchableOpacity>
-        </View>
+        <Text style={styles.bigText}>Completed Trips</Text>
+        <Text style={styles.smallText}>You have no completed trips yet.</Text>
       </Animated.View>
     </View>
   );
@@ -107,6 +105,18 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.primary,
+  },
+  bigText: {
+    fontSize: 30,
+    color: colors.white,
+    fontWeight: "bold",
+    marginBottom: 20,
+  },
+  smallText: {
+    fontSize: 20,
+    color: colors.white,
+    fontWeight: "bold",
+    marginBottom: 10,
   },
   drawer: {
     position: "absolute",
@@ -145,6 +155,30 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: colors.secondary,
   },
+  messages: {
+    borderBottomWidth: 1,
+    borderBottomColor: colors.opaque,
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 20,
+  },
+  texts: {
+    marginLeft: 15,
+  },
+  image: {
+    width: 70,
+    height: 70,
+    borderRadius: 50,
+  },
+  username: {
+    color: colors.secondary,
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  message: {
+    color: colors.secondary,
+  },
 });
 
-export default SettingsScreen;
+export default TripScreen;

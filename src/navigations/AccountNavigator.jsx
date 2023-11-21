@@ -5,6 +5,7 @@ import ChatScreen from "../screens/account/ChatScreen";
 import SettingsNavigator from "./SettingsNavigator";
 import EarnScreen from "../screens/home/EarnScreen";
 import LegalScreen from "../screens/home/LegalScreen";
+import TripScreen from "../screens/home/TripScreen";
 
 const Stack = createStackNavigator();
 
@@ -39,6 +40,11 @@ const AccountNavigator = () => {
       <Stack.Screen
         name="EarnScreen"
         component={EarnScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="TripScreen"
+        component={TripScreen}
         options={{ headerShown: false }}
       />
       <Stack.Screen

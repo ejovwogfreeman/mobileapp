@@ -6,8 +6,11 @@ import { colors } from "../../components/Colors";
 const LegalScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={() => navigation.goBack()}>
-        <Icon name="chevron-left" size={40} color={colors.secondary} />
+      <TouchableOpacity
+        style={styles.closeButton}
+        onPress={() => navigation.goBack()}
+      >
+        <Icon name="close" size={30} color={colors.secondary} />
       </TouchableOpacity>
     </View>
   );
@@ -22,6 +25,12 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 10,
     backgroundColor: colors.primary,
     paddingTop: 5,
+  },
+  closeButton: {
+    alignItems: "flex-end",
+    padding: 20,
+    paddingTop: 15,
+    paddingBottom: 0,
   },
 });
 
