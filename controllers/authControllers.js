@@ -30,6 +30,7 @@ const registerUser = async (req, res) => {
     const user = new User({
       username: email.split("@")[0],
       email,
+      accountType,
       password: hashedPassword,
     });
 

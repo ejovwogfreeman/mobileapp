@@ -2,6 +2,10 @@ const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema(
   {
+    fullName: {
+      type: String,
+      required: true,
+    },
     username: {
       type: String,
       required: true,
@@ -16,7 +20,12 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
     profileImage: [Object],
+    verifiedDoc: [Object],
     isAdmin: {
+      type: Boolean,
+      default: false,
+    },
+    isVerified: {
       type: Boolean,
       default: false,
     },
@@ -34,6 +43,10 @@ const userSchema = new mongoose.Schema(
         coordinates: [Number],
       },
     },
+    address: {
+      type: String,
+    },
+    work: { type: String },
   },
   { timestamps: true }
 );
