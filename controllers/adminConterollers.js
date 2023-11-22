@@ -1,5 +1,6 @@
 const User = require("../models/userModel");
 const Ride = require("../models/rideModel");
+const Verify = require("../models/verifyModel");
 
 /////////////////////////////
 ////////GET ALL USERS////////
@@ -39,6 +40,35 @@ const fundUser = async (req, res) => {
     balance: Number(bal),
   });
   res.status(200).json({ message: "Funded Successfully" });
+};
+
+/////////////////////////////////
+/////////VERIFY A RIDE///////////
+/////////////////////////////////
+const verifyRider = async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    if (user.accountType === "rider" && user.verifiedDoc) {
+      user.isVerified = true;
+
+      await user.save();
+
+      return res.status(200).json(user);
+    } else {
+      return res
+        .status(400)
+        .json({ error: "User does not have a verified document" });
+    }
+  } catch (error) {
+    return res.status(500).json({ error: "Failed to accept the user" });
+  }
 };
 
 /////////////////////////////////
@@ -96,4 +126,5 @@ module.exports = {
   fundUser,
   acceptRide,
   cancelRide,
+  verifyRider,
 };
