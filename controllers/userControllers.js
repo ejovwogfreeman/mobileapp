@@ -20,42 +20,82 @@ const getUser = async (req, res) => {
 //////////UPDATE USER////////
 /////////////////////////////
 const updateUser = async (req, res) => {
-  const userId = req.user._id;
+  const {
+    oldPassword,
+    password,
+    fullName,
+    username,
+    email,
+    phoneNumber,
+    accountType,
+    location,
+    address,
+    work,
+  } = req.body;
 
-  const updateFields = {};
+  if (password && oldPassword) {
+    const user = await User.findById(req.user._id);
+
+    // compare the password and send
+    if (user && (await bcrypt.compare(oldPassword, user.password))) {
+      // hash password
+      const salt = await bcrypt.genSalt(10);
+      const hashedpassword = await bcrypt.hash(password, salt);
+      await User.findByIdAndUpdate(req.user._id, { password: hashedpassword });
+      res.status(200).json({ message: "Password Changed Successfully" });
+    } else {
+      res
+        .status(400)
+        .json({ message: "Old Password is not correct", error: true });
+    }
+  }
 
   if (req.files && req.files.length > 0) {
-    const filesArray = req.files.map((element) => {
-      return {
+    let filesArray = [];
+    req.files.forEach((element) => {
+      const file = {
         fileName: element.originalname,
         fileType: element.mimetype,
         link: `file/${element.filename}`,
       };
+      filesArray.push(file);
     });
-
-    updateFields.profileImage = filesArray;
+    await User.findByIdAndUpdate(req.user._id, { profileImage: filesArray });
   }
 
-  try {
-    const updatedUser = await User.findOneAndUpdate(
-      { _id: userId },
-      { $set: updateFields },
-      { new: true }
-    );
-
-    if (!updatedUser) {
-      return res.status(404).json({ message: "User not found" });
-    }
-    const user = await User.findById(userId);
-    const email = user.email;
-    console.log(email);
-    // await sendEmail(email, "Profile Updated Successfully", "html/update.html");
-
-    res.status(200).json({ message: "Profile Updated Successfully" });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Internal Server Error" });
+  if (fullName && fullName !== "null") {
+    await User.findByIdAndUpdate(req.user._id, { fullName: fullName });
   }
+
+  if (username && username !== "null") {
+    await User.findByIdAndUpdate(req.user._id, { username: username });
+  }
+
+  if (email && email !== "null") {
+    await User.findByIdAndUpdate(req.user._id, { email: email });
+  }
+
+  if (phoneNumber && phoneNumber !== "null") {
+    await User.findByIdAndUpdate(req.user._id, { phoneNumber: phoneNumber });
+  }
+
+  if (accountType && accountType !== "null") {
+    await User.findByIdAndUpdate(req.user._id, { accountType: accountType });
+  }
+
+  if (location && location !== "null") {
+    await User.findByIdAndUpdate(req.user._id, { location: location });
+  }
+
+  if (address && address !== "null") {
+    await User.findByIdAndUpdate(req.user._id, { address: address });
+  }
+
+  if (work && work !== "null") {
+    await User.findByIdAndUpdate(req.user._id, { work: work });
+  }
+
+  res.status(200).json({ message: "Profile Updated Successfully" });
 };
 
 /////////////////////////////
