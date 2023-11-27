@@ -88,6 +88,7 @@ const getTabBarVisibility = (route) => {
   if (
     routeName === "SettingsNav" ||
     routeName === "Messages" ||
+    routeName === "LocationScreen" ||
     routeName === "MapScreen" ||
     routeName === "ChatScreen" ||
     routeName === "EarnScreen" ||

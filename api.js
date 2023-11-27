@@ -48,10 +48,10 @@ export const loginUser = async (email, password) => {
 export const logoutUser = async () => {
   try {
     await AsyncStorage.clear();
-    console.log("UserData removed from AsyncStorage");
+    // // console.log("UserData removed from AsyncStorage");
 
-    const keys = await AsyncStorage.getAllKeys();
-    console.log("Remaining keys in AsyncStorage:", keys);
+    // const keys = await AsyncStorage.getAllKeys();
+    // console.log("Remaining keys in AsyncStorage:", keys);
   } catch (error) {
     console.error("Error removing UserData from AsyncStorage:", error);
   }

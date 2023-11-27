@@ -99,6 +99,22 @@ const RegisterScreen = ({ navigation }) => {
                 }}
               />
             )}
+            <Text style={styles.label}>Phone Number</Text>
+            <View style={styles.inputbox}>
+              <Icon
+                name="phone"
+                size={20}
+                style={styles.searchIcon}
+                color={colors.secondary}
+              />
+              <TextInput
+                placeholderTextColor={colors.opaque}
+                style={styles.input}
+                placeholder="Phone Number"
+                value={email}
+                onChangeText={(text) => setEmail(text)}
+              />
+            </View>
             <Text style={styles.label}>Email</Text>
             <View style={styles.inputbox}>
               <Icon

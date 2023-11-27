@@ -83,7 +83,7 @@ const SettingsScreen = ({ navigation }) => {
           >
             <Text style={styles.menuText}>Add Work</Text>
           </TouchableOpacity>
-          {user && user.accountType !== "rider" && (
+          {user && user.accountType === "rider" && (
             <TouchableOpacity
               onPress={() => navigation.navigate("AddDocument")}
               style={styles.menuButton}

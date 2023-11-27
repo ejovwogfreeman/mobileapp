@@ -1,182 +1,217 @@
+///omj
+// // AIzaSyAfbw26gYCXHuaE_LiEbVi_hqUsSBixAL8
+
+// uche
+// AIzaSyCzZeDcEfwCdXSoameCC6SqZeJdrYooDp8
+
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  Text,
-  KeyboardAvoidingView,
-  Platform,
-  Keyboard,
-} from "react-native";
-import { colors } from "../../components/Colors";
-import Icon from "react-native-vector-icons/MaterialIcons";
-import MapView, { Marker } from "react-native-maps";
-import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import MapView, { Marker, Polyline } from "react-native-maps";
 import MapViewDirections from "react-native-maps-directions";
-import MapStyle from "./MapStyle.json";
+import Icon from "react-native-vector-icons/MaterialIcons";
+import { colors } from "../../components/Colors";
 
-const MapScreen = ({ navigation }) => {
-  const [origin, setOrigin] = useState(null);
-  const [destination, setDestination] = useState(null);
-  const [keyboardOpen, setKeyboardOpen] = useState(false);
-
-  const handleOriginSelect = (data, details) => {
-    setOrigin({
-      latitude: details.geometry.location.lat,
-      longitude: details.geometry.location.lng,
-    });
-  };
-
-  const handleDestinationSelect = (data, details) => {
-    setDestination({
-      latitude: details.geometry.location.lat,
-      longitude: details.geometry.location.lng,
-    });
-  };
+const MapScreen = ({ navigation, route }) => {
+  const { origin, destination } = route.params;
+  const [arrowPosition, setArrowPosition] = useState(origin);
+  const [routeCoordinates, setRouteCoordinates] = useState([]);
 
   useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      "keyboardDidShow",
-      () => {
-        setKeyboardOpen(true);
-      }
-    );
-    const keyboardDidHideListener = Keyboard.addListener(
-      "keyboardDidHide",
-      () => {
-        setKeyboardOpen(false);
-      }
-    );
+    const intervalId = setInterval(() => {
+      // Calculate the next position along the route
+      const nextPosition = getNextPosition(arrowPosition, destination);
 
-    return () => {
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
-    };
-  }, []);
+      // Update the arrow's position
+      setArrowPosition(nextPosition);
+    }, 500); // Update every half second (adjust as needed for speed)
+
+    return () => clearInterval(intervalId);
+  }, [arrowPosition, destination]);
+
+  useEffect(() => {
+    // Calculate route coordinates
+    const coordinates = [
+      { latitude: origin.latitude, longitude: origin.longitude },
+      { latitude: destination.latitude, longitude: destination.longitude },
+    ];
+    setRouteCoordinates(coordinates);
+  }, [origin, destination]);
+
+  const getNextPosition = (currentPosition, destination) => {
+    // For simplicity, use a constant speed for the entire route
+    const speed = 0.005; // Adjust the speed as needed
+    const deltaX = destination.longitude - currentPosition.longitude;
+    const deltaY = destination.latitude - currentPosition.latitude;
+
+    const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+    const ratio = speed / distance;
+
+    const nextLongitude = currentPosition.longitude + ratio * deltaX;
+    const nextLatitude = currentPosition.latitude + ratio * deltaY;
+
+    return { latitude: nextLatitude, longitude: nextLongitude };
+  };
+
+  const locations = [origin, destination].filter(
+    (location) => location !== null
+  );
+
+  const tableData = [
+    { text: "Distance", info: 25 + " KM" },
+    { text: "Time", info: 30 + " Mins" },
+    { text: "Price", info: "NGN " + 22 },
+  ];
+
+  const darkMapStyle = [
+    {
+      elementType: "geometry",
+      stylers: [
+        {
+          color: "#242f3e",
+        },
+      ],
+    },
+    {
+      elementType: "labels.text.stroke",
+      stylers: [
+        {
+          color: "#242f3e",
+        },
+      ],
+    },
+    {
+      elementType: "labels.text.fill",
+      stylers: [
+        {
+          color: "#746855",
+        },
+      ],
+    },
+    {
+      featureType: "administrative.locality",
+      elementType: "labels.text.fill",
+      stylers: [
+        {
+          color: "#d59563",
+        },
+      ],
+    },
+  ];
 
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior={Platform.OS === "ios" ? "padding" : null}
-    >
-      <View style={styles.accountContainer}>
-        <View style={styles.iconContainer}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Icon name="chevron-left" size={40} color={colors.secondary} />
-          </TouchableOpacity>
-        </View>
-
-        <View style={{ height: keyboardOpen ? "50%" : "70%" }}>
-          <MapView
-            style={{ height: "100%" }}
-            initialRegion={{
-              latitude: 37.78825,
-              longitude: -122.4324,
-              latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421,
-            }}
-            customMapStyle={MapStyle}
-          >
-            {origin && (
-              <Marker
-                coordinate={origin}
-                title="Origin"
-                description="Origin Description"
-                pinColor="green"
-              />
-            )}
-
-            {destination && (
-              <Marker
-                coordinate={destination}
-                title="Destination"
-                description="Destination Description"
-                pinColor="red"
-              />
-            )}
-
-            {origin && destination && (
-              <MapViewDirections
-                origin={origin}
-                destination={destination}
-                apikey={"YOUR_GOOGLE_API_KEY"}
-                strokeWidth={3}
-                strokeColor="blue"
-              />
-            )}
-          </MapView>
-        </View>
-        <View
-          style={{
-            ...styles.autocompleteContainer,
-            height: keyboardOpen ? "42%" : "30%",
+    <View style={styles.container}>
+      <View style={styles.iconContainer}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Icon name="chevron-left" size={40} color="white" />
+        </TouchableOpacity>
+      </View>
+      <View style={{ height: "65%" }}>
+        <MapView
+          style={styles.map}
+          initialRegion={{
+            latitude: locations[0].latitude,
+            longitude: locations[0].longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
           }}
+          provider="google"
+          customMapStyle={darkMapStyle}
         >
-          <View>
-            <Text style={styles.text}>FROM</Text>
-            <GooglePlacesAutocomplete
-              placeholder="Enter Pickup Location"
-              onPress={handleOriginSelect}
-              query={{
-                key: "YOUR_GOOGLE_API_KEY",
-                language: "en",
+          {locations.map((location, index) => (
+            <Marker
+              key={index}
+              coordinate={{
+                latitude: location.latitude,
+                longitude: location.longitude,
               }}
-              styles={{
-                textInput: {
-                  color: colors.secondary,
-                  fontSize: 16,
-                  backgroundColor: "rgba(256,256,256,0.05)",
-                  borderWidth: 1,
-                  borderColor: colors.opaque,
-                },
-              }}
-              textInputProps={{
-                placeholderTextColor: colors.opaque,
-              }}
+              title={index === 0 ? "Origin" : "Destination"}
+              pinColor={index === 0 ? "blue" : "red"}
             />
-          </View>
-          <View>
-            <Text style={styles.text}>TO</Text>
-            <GooglePlacesAutocomplete
-              placeholder="Enter Delivery Location"
-              onPress={handleDestinationSelect}
-              query={{
-                key: "YOUR_GOOGLE_API_KEY",
-                language: "en",
+          ))}
+          {origin && destination && (
+            <Marker
+              coordinate={{
+                latitude: arrowPosition.latitude,
+                longitude: arrowPosition.longitude,
               }}
-              styles={{
-                textInput: {
-                  color: colors.secondary,
-                  fontSize: 16,
-                  backgroundColor: "rgba(256,256,256,0.05)",
-                  borderWidth: 1,
-                  borderColor: colors.opaque,
-                },
-              }}
-              textInputProps={{
-                placeholderTextColor: colors.opaque,
-              }}
+              title="Arrow"
+              pinColor="green"
             />
+          )}
+          {routeCoordinates.length > 0 && (
+            <Polyline
+              coordinates={routeCoordinates}
+              strokeWidth={2}
+              strokeColor="red"
+            />
+          )}
+          {origin && destination && (
+            <MapViewDirections
+              origin={origin}
+              destination={destination}
+              apikey="AIzaSyAfbw26gYCXHuaE_LiEbVi_hqUsSBixAL8"
+              strokeWidth={2}
+              strokeColor="blue"
+            />
+          )}
+        </MapView>
+      </View>
+      <View style={styles.bottomTab}>
+        <View style={styles.bottomHeading}>
+          <Text style={styles.bottomHeadingText}>Start Your Journey</Text>
+        </View>
+        <View style={styles.infoContainer}>
+          <View style={styles.info}>
+            <View>
+              <Icon name="motorcycle" size={120} color="white" />
+            </View>
+            <View style={styles.table}>
+              {tableData.map((item, index) => (
+                <View key={index} style={styles.row}>
+                  <Text style={styles.cell}>{item.text}</Text>
+                  <Text style={styles.cell}>{item.info}</Text>
+                </View>
+              ))}
+            </View>
           </View>
-          <TouchableOpacity
-            style={styles.confirmButton}
-            onPress={() => navigation.navigate("ChooseRider")}
-          >
-            <Text style={styles.confirmButtonText}>CHOOSE RIDER</Text>
+          <TouchableOpacity style={styles.choose}>
+            <View style={styles.chooseTextCont}>
+              <Icon
+                name="credit-card"
+                size={40}
+                color="white"
+                style={{ marginLeft: -10 }}
+              />
+              <Text style={styles.chooseText}>CHOOSE PAYMENT METHOD</Text>
+            </View>
+            <Icon
+              name="chevron-right"
+              size={40}
+              color="white"
+              style={{ marginRight: -12 }}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.ride}>
+            <Text style={styles.rideText}>START RIDE</Text>
           </TouchableOpacity>
         </View>
       </View>
-    </KeyboardAvoidingView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  accountContainer: {
+  container: {
     flex: 1,
     borderTopWidth: 5,
-    borderTopColor: colors.opaque,
+    borderTopColor: "rgba(255,255,255,0.3)",
     backgroundColor: colors.primary,
   },
+  map: {
+    flex: 1,
+    width: "100%",
+  },
+
   iconContainer: {
     backgroundColor: "rgba(0, 0, 0, 0.3)",
     width: 45,
@@ -211,6 +246,102 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     color: colors.secondary,
+  },
+  distanceContainer: {
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
+    padding: 10,
+    borderRadius: 5,
+    position: "absolute",
+    bottom: 10,
+    left: 10,
+    zIndex: 1,
+  },
+  distanceText: {
+    color: "#333",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  bottomTab: {
+    position: "absolute",
+    bottom: 0,
+    right: 0,
+    left: 0,
+    height: 350,
+    backgroundColor: colors.primary,
+    borderTopLeftRadius: 15,
+    borderTopRightRadius: 15,
+    borderTopWidth: 5,
+    borderTopColor: "rgba(255,255,255,0.3)",
+  },
+  bottomHeading: {
+    padding: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: "rgba(255,255,255,0.3)",
+    marginBottom: 20,
+    justifyContentL: "center",
+    alignItems: "center",
+  },
+  bottomHeadingText: {
+    color: colors.secondary,
+    fontSize: 18,
+  },
+  info: {
+    borderWidth: 1,
+    borderColor: colors.secondary,
+    borderRadius: 10,
+    flexDirection: "row",
+  },
+  infoContainer: {
+    paddingLeft: 20,
+    paddingRight: 20,
+  },
+  table: {
+    margin: 10,
+    borderWidth: 1,
+    borderColor: "#ddd",
+    flex: 1,
+  },
+  row: {
+    flexDirection: "row",
+    borderBottomWidth: 1,
+    borderColor: "#ddd",
+  },
+  cell: {
+    flex: 1,
+    padding: 10,
+    color: colors.secondary,
+  },
+  choose: {
+    color: colors.secondary,
+    borderRadius: 5,
+    padding: 5,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginTop: 10,
+    marginBottom: 10,
+  },
+  chooseTextCont: {
+    alignItems: "center",
+    flexDirection: "row",
+    flex: 1,
+  },
+  chooseText: {
+    color: colors.secondary,
+    fontSize: 15,
+    fontWeight: "bold",
+  },
+  ride: {
+    backgroundColor: colors.blue,
+    color: colors.secondary,
+    borderRadius: 5,
+    padding: 15,
+    alignItems: "center",
+  },
+  rideText: {
+    color: colors.secondary,
+    fontSize: 20,
+    fontWeight: "bold",
   },
 });
 

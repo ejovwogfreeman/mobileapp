@@ -1,5 +1,6 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import HomeScreen from "../screens/home/HomeScreen";
+import LocationScreen from "../screens/home/LocationScreen";
 import MapScreen from "../screens/home/MapScreen";
 import ChooseRider from "../screens/home/ChooseRider";
 
@@ -11,6 +12,11 @@ const HomeNavigator = () => {
       <Stack.Screen
         name="HomeScreen"
         component={HomeScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="LocationScreen"
+        component={LocationScreen}
         options={{ headerShown: false }}
       />
       <Stack.Screen

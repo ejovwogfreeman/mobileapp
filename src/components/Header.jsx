@@ -12,7 +12,7 @@ const Header = ({ navigation }) => {
           <Text style={styles.text2}>Worry No More...</Text>
           <TouchableOpacity
             style={styles.seeMore}
-            onPress={() => navigation.navigate("MapScreen")}
+            onPress={() => navigation.navigate("LocationScreen")}
           >
             <Text style={styles.text3}>Share Locations</Text>
             <Icon name="east" size={20} color={colors.black} />

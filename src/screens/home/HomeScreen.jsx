@@ -8,9 +8,40 @@ import Slider from "../../components/Slider";
 import Services from "../../components/Services";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useUser } from "../../../userContext";
+import * as Location from "expo-location";
 
 const HomeScreen = ({ navigation }) => {
   const { user } = useUser();
+  const [currentLocation, setCurrentLocation] = useState(null);
+
+  useEffect(() => {
+    const fetchCurrentLocation = async () => {
+      try {
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== "granted") {
+          console.error("Permission to access location was denied");
+          return null;
+        }
+
+        let location = await Location.getCurrentPositionAsync({});
+        setCurrentLocation({
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        });
+      } catch (error) {
+        console.error("Error fetching location:", error);
+      }
+    };
+
+    // Fetch the current location immediately after a successful login
+    if (user) {
+      fetchCurrentLocation();
+    }
+  }, [user]); // Run the effect whenever the login status changes
+
+  // console.log("currentLocation", currentLocation);
 
   return (
     <View style={styles.container}>
@@ -23,7 +54,9 @@ const HomeScreen = ({ navigation }) => {
               height: "100%",
             }}
           >
-            <TouchableOpacity onPress={() => navigation.navigate("MapScreen")}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("LocationScreen")}
+            >
               <Searchbar />
             </TouchableOpacity>
             <Header navigation={navigation} />

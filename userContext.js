@@ -23,6 +23,7 @@ export function UserProvider({ children }) {
 
   const handleLogout = async () => {
     await AsyncStorage.removeItem("userData");
+    await AsyncStorage.removeItem("locationPermissionStatus");
     setUser(null);
     await logoutUser();
   };
