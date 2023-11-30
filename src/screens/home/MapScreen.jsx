@@ -5,16 +5,20 @@
 // AIzaSyCzZeDcEfwCdXSoameCC6SqZeJdrYooDp8
 
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
 import MapView, { Marker, Polyline } from "react-native-maps";
 import MapViewDirections from "react-native-maps-directions";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { colors } from "../../components/Colors";
+import axios from "axios";
 
 const MapScreen = ({ navigation, route }) => {
   const { origin, destination } = route.params;
   const [arrowPosition, setArrowPosition] = useState(origin);
   const [routeCoordinates, setRouteCoordinates] = useState([]);
+
+  // console.log("origin", origin.formatted_address);
+  // console.log("destination", destination.formatted_address);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -39,7 +43,7 @@ const MapScreen = ({ navigation, route }) => {
 
   const getNextPosition = (currentPosition, destination) => {
     // For simplicity, use a constant speed for the entire route
-    const speed = 0.005; // Adjust the speed as needed
+    const speed = 0.0005; // Adjust the speed as needed
     const deltaX = destination.longitude - currentPosition.longitude;
     const deltaY = destination.latitude - currentPosition.latitude;
 
@@ -56,10 +60,60 @@ const MapScreen = ({ navigation, route }) => {
     (location) => location !== null
   );
 
+  const [distance, setDistance] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const amountPerKilometer = 200;
+
+  useEffect(() => {
+    // Fetch distance and duration information from Google Maps Directions API
+    const getDirections = async () => {
+      try {
+        const apiKey = "AIzaSyAfbw26gYCXHuaE_LiEbVi_hqUsSBixAL8";
+        const response = await axios.get(
+          `https://maps.googleapis.com/maps/api/directions/json?origin=${origin.latitude},${origin.longitude}&destination=${destination.latitude},${destination.longitude}&key=${apiKey}`
+        );
+
+        const route = response.data.routes[0];
+        if (route) {
+          setDistance(route.legs[0].distance.value / 1000); // Convert meters to kilometers
+          setDuration(route.legs[0].duration.value / 60); // Convert seconds to minutes
+        }
+      } catch (error) {
+        console.error("Error fetching directions:", error);
+      }
+    };
+
+    getDirections();
+  }, [origin, destination]);
+
+  const price = distance * amountPerKilometer;
+
+  const formatTime = (minutes) => {
+    const hours = Math.floor(minutes / 60);
+    const remainingMinutes = minutes % 60;
+
+    if (hours > 0 && hours <= 1) {
+      return `${hours} HR ${remainingMinutes} MINS`;
+    } else if (hours > 1) {
+      return `${hours} HRS ${remainingMinutes} MINS`;
+    } else {
+      return `${remainingMinutes} MINS`;
+    }
+  };
+
+  const formatPriceWithCommas = (price) => {
+    return Number(price).toLocaleString(undefined, { useGrouping: true });
+  };
+
+  const totalPrice = formatPriceWithCommas(price.toFixed(0));
+
   const tableData = [
-    { text: "Distance", info: 25 + " KM" },
-    { text: "Time", info: 30 + " Mins" },
-    { text: "Price", info: "NGN " + 22 },
+    { text: "DISTANCE", info: `${distance.toFixed(2)} KM` },
+    { text: "TIME", info: formatTime(duration.toFixed(0)) },
+    {
+      text: "PRICE",
+      info: `NGN ${totalPrice}`,
+    },
   ];
 
   const darkMapStyle = [
@@ -163,7 +217,11 @@ const MapScreen = ({ navigation, route }) => {
         <View style={styles.infoContainer}>
           <View style={styles.info}>
             <View>
-              <Icon name="motorcycle" size={120} color="white" />
+              {/* <Icon name="motorcycle" size={120} color="white" /> */}
+              <Image
+                source={require("../../../assets/bikeicon.png")}
+                style={{ width: 100, height: 85, tintColor: "white" }}
+              />
             </View>
             <View style={styles.table}>
               {tableData.map((item, index) => (
@@ -174,7 +232,12 @@ const MapScreen = ({ navigation, route }) => {
               ))}
             </View>
           </View>
-          <TouchableOpacity style={styles.choose}>
+          <TouchableOpacity
+            style={styles.choose}
+            onPress={() =>
+              navigation.navigate("PaymentScreen", { totalPrice, price })
+            }
+          >
             <View style={styles.chooseTextCont}>
               <Icon
                 name="credit-card"
@@ -191,7 +254,10 @@ const MapScreen = ({ navigation, route }) => {
               style={{ marginRight: -12 }}
             />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.ride}>
+          <TouchableOpacity
+            style={styles.ride}
+            onPress={() => navigation.navigate("ChooseRider")}
+          >
             <Text style={styles.rideText}>START RIDE</Text>
           </TouchableOpacity>
         </View>
@@ -290,13 +356,15 @@ const styles = StyleSheet.create({
     borderColor: colors.secondary,
     borderRadius: 10,
     flexDirection: "row",
+    alignItems: "center",
+    padding: 10,
   },
   infoContainer: {
     paddingLeft: 20,
     paddingRight: 20,
   },
   table: {
-    margin: 10,
+    marginLeft: 10,
     borderWidth: 1,
     borderColor: "#ddd",
     flex: 1,
@@ -310,6 +378,8 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     color: colors.secondary,
+    fontWeight: "bold",
+    fontSize: 12,
   },
   choose: {
     color: colors.secondary,

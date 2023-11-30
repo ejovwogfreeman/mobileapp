@@ -90,6 +90,7 @@ const getTabBarVisibility = (route) => {
     routeName === "Messages" ||
     routeName === "LocationScreen" ||
     routeName === "MapScreen" ||
+    routeName === "PaymentScreen" ||
     routeName === "ChatScreen" ||
     routeName === "EarnScreen" ||
     routeName === "LegalScreen" ||

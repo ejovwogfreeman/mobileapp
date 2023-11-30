@@ -12,44 +12,38 @@ const LocationScreen = ({ navigation }) => {
   const [isPickupSelected, setIsPickupSelected] = useState(false);
   const [isFocus, setIsFocus] = useState(false);
 
-  const handlePickupSelect = (place, isOrigin) => {
-    const { geometry, description } = place;
+  const handlePickupSelect = (place) => {
+    const { geometry, formatted_address } = place;
     const { location } = geometry;
     const selectedLocation = {
       latitude: location.lat,
       longitude: location.lng,
-      description,
+      formatted_address,
     };
 
-    if (isOrigin) {
-      setOrigin(selectedLocation);
-    } else {
-      setDestination(selectedLocation);
-    }
+    setOrigin(selectedLocation);
 
     setIsPickupSelected(true);
     setIsFocus(false);
   };
 
-  const handleDestinationSelect = (place, isOrigin) => {
-    const { geometry, description } = place;
+  const handleDestinationSelect = (place) => {
+    const { geometry, formatted_address } = place;
     const { location } = geometry;
     const selectedLocation = {
       latitude: location.lat,
       longitude: location.lng,
-      description,
+      formatted_address,
     };
 
-    if (isOrigin) {
-      setOrigin(selectedLocation);
-    } else {
-      setDestination(selectedLocation);
-    }
+    setDestination(selectedLocation);
   };
 
-  const navigateToMap = () => {
+  const handleNavigateToMap = () => {
     if (!origin || !destination || origin === "" || destination === "") {
       Toast.error("PLEASE SELECT ALL FIELDS");
+    } else if (origin === destination) {
+      Toast.error("ORIGIN CANNOT BE THESAME AS DESTINATION");
     } else {
       navigation.navigate("MapScreen", { origin, destination });
     }
@@ -88,6 +82,12 @@ const LocationScreen = ({ navigation }) => {
           poweredContainer: {
             display: "none",
           },
+          row: {
+            backgroundColor: colors.primary,
+          },
+          description: {
+            color: colors.secondary,
+          },
         }}
         textInputProps={{
           placeholderTextColor: "rgba(255,255,255,0.7)",
@@ -122,13 +122,19 @@ const LocationScreen = ({ navigation }) => {
             poweredContainer: {
               display: "none",
             },
+            row: {
+              backgroundColor: colors.primary,
+            },
+            description: {
+              color: colors.secondary,
+            },
           }}
           textInputProps={{
             placeholderTextColor: "rgba(255,255,255,0.7)",
           }}
         />
       )}
-      <TouchableOpacity style={styles.ride} onPress={navigateToMap}>
+      <TouchableOpacity style={styles.ride} onPress={handleNavigateToMap}>
         <Text style={styles.rideText}>START RIDE</Text>
       </TouchableOpacity>
     </View>
