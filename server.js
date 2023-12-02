@@ -29,8 +29,8 @@ app.use("/api/auth/", require("./routes/authRoutes"));
 app.use("/api/users/", require("./routes/userRoutes"));
 app.use("/api/riders/", require("./routes/riderRoutes"));
 app.use("/api/admin/", require("./routes/adminRoutes"));
-// app.use("/api/conversation/", require("./routes/conversationRoutes"));
-// app.use("/api/message/", require("./routes/messageRoutes"));
+app.use("/api/conversation/", require("./routes/conversationRoutes"));
+app.use("/api/message/", require("./routes/messageRoutes"));
 
 server.listen(port, () => {
   console.log(`server running on port ${port}`);

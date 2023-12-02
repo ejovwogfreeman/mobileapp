@@ -8,17 +8,6 @@ function initializeSocket(server) {
     },
   });
 
-  // io.on("connection", (socket) => {
-  //   console.log("A user connected");
-
-  //   socket.on("sendMessage", (message) => {
-  //     io.emit("sendMessage", message);
-  //   });
-
-  //   socket.on("disconnect", () => {
-  //     console.log("A user disconnected");
-  //   });
-  // });
   let users = [];
 
   const addUser = (userId, socketId) => {
@@ -42,22 +31,31 @@ function initializeSocket(server) {
     socket.on("addUser", (userId) => {
       addUser(userId, socket.id);
       io.emit("getUsers", users);
+      console.log(users);
     });
 
-    //send and get message
-    socket.on("sendMessage", ({ senderId, receiverId, text }) => {
-      const user = getUser(receiverId);
-      io.to(user.socketId).emit("getMessage", {
-        senderId,
-        text,
-      });
-    });
+    socket.on(
+      "sendMessage",
+      ({ senderId, receiverId, text, conversationId }) => {
+        // const user = getUser(receiverId);
+        // io.to(user.socketId).emit("getMessage", {
+        io.emit("getMessage", {
+          senderId,
+          receiverId,
+          text,
+          conversationId,
+        });
+
+        console.log({ senderId, receiverId, text, conversationId });
+      }
+    );
 
     //when disconnect
     socket.on("disconnect", () => {
       console.log("a user disconnected!");
       removeUser(socket.id);
       io.emit("getUsers", users);
+      console.log(users);
     });
   });
 

@@ -15,7 +15,6 @@ const makeConversation = async (req, res) => {
 };
 
 //get conv of a user
-
 const getConversation = async (req, res) => {
   try {
     const conversation = await Conversation.find({
@@ -28,11 +27,10 @@ const getConversation = async (req, res) => {
 };
 
 // get conv includes two userId
-
 const getConversationBtwUsers = async (req, res) => {
   try {
     const conversation = await Conversation.findOne({
-      members: { $all: [req.params.firstUserId, req.params.secondUserId] },
+      members: { $all: [req.params.senderId, req.params.receiverId] },
     });
     res.status(200).json(conversation);
   } catch (err) {

@@ -1,6 +1,7 @@
 const express = require("express");
 const {
   getUser,
+  getUsers,
   updateUser,
   changePassword,
   forgotPasword,
@@ -23,6 +24,7 @@ const { upload } = require("../middlewares/fileMiddleware");
 const router = express.Router();
 
 router.get("/user", protect, getUser);
+router.get("/user/:userId", protect, getUsers);
 router.post("/user/change_password", protect, changePassword);
 router.post("/user/forgot_password", forgotPasword);
 router.post("/user/reset_password", resetPassword);

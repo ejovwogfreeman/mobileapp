@@ -17,6 +17,19 @@ const getUser = async (req, res) => {
 };
 
 /////////////////////////////
+///////GET ONLINE USERS//////
+/////////////////////////////
+const getUsers = async (req, res) => {
+  const userId = req.params.userId;
+  let user = await User.findById(userId);
+  const { ...others } = user._doc;
+  res.send({
+    ...others,
+    token: accessToken(user),
+  });
+};
+
+/////////////////////////////
 //////////UPDATE USER////////
 /////////////////////////////
 const updateUser = async (req, res) => {
@@ -248,6 +261,7 @@ const cancelRide = async (req, res) => {
 
 module.exports = {
   getUser,
+  getUsers,
   updateUser,
   changePassword,
   forgotPasword,
