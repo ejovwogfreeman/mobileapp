@@ -32,6 +32,7 @@ const MessageScreen = ({ navigation }) => {
     }).start(() => {
       setDrawerOpen(false);
       navigation.goBack();
+      // navigation.navigate("Account");
     });
   };
 

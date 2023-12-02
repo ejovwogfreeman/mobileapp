@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   Animated,
+  ScrollView,
   FlatList,
   Image,
   TextInput,
@@ -14,8 +15,16 @@ import {
 } from "react-native";
 import { colors } from "../../components/Colors";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import { useUser } from "../../../userContext";
+import io from "socket.io-client";
+import axios from "axios";
+import { getUserToken } from "../../../api";
 
 const ChatScreen = ({ route, navigation }) => {
+  // const scrollRef = useRef();
+
+  const { user } = useUser();
+
   const translateY = useRef(new Animated.Value(300)).current;
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [keyboardOpen, setKeyboardOpen] = useState(false);
@@ -65,82 +74,111 @@ const ChatScreen = ({ route, navigation }) => {
       keyboardDidHideListener.remove();
     };
   }, []);
-  const { user } = route.params;
 
-  const messages = [
-    {
-      id: 1,
-      username: "User1",
-      sender: false,
-      message:
-        "Hello, this is message 1. Fifth message Fifth message Fifth message",
-      date: "10:59pm",
-    },
-    {
-      id: 2,
-      username: "User2",
-      sender: true,
-      message: "Message 2 here! Fifth message",
-      date: "10:59pm",
-    },
-    {
-      id: 3,
-      username: "User1",
-      sender: false,
-      message: "Hello, this is message 3.",
-      date: "10:59pm",
-    },
-    {
-      id: 4,
-      username: "User2",
-      sender: true,
-      message: "Message 4 for you Fifth message.",
-      date: "10:59pm",
-    },
-    {
-      id: 5,
-      username: "User1",
-      sender: false,
-      message: "Fifth message is here.  is here.",
-      date: "10:59pm",
-    },
-    {
-      id: 6,
-      username: "User2",
-      sender: true,
-      message:
-        "Hello from User 6. Hello from User 6.Hello from User 6.Hello from User 6.Hello from User 6.Hello from User 6.Hello from User 6.",
-      date: "10:59pm",
-    },
-    {
-      id: 7,
-      username: "User1",
-      sender: false,
-      message: "Fifth message is here.",
-      date: "10:59pm",
-    },
-    {
-      id: 8,
-      username: "User2",
-      sender: true,
-      message: "Hello from User 6.",
-      date: "10:59pm",
-    },
-    {
-      id: 9,
-      username: "User1",
-      sender: false,
-      message: "Fifth message is here.",
-      date: "10:59pm",
-    },
-    {
-      id: 10,
-      username: "User2",
-      sender: true,
-      message: "Hello from User 6.",
-      date: "10:59pm",
-    },
-  ];
+  const { users, roomName, conversation } = route.params;
+
+  // console.log("roomName", roomName);
+
+  // const [socket, setSocket] = useState(null);
+  const baseUrl = "http://172.20.10.4:8000";
+  // const socket = io(baseUrl);
+  const socket = useRef();
+  const [messages, setMessages] = useState([]);
+  const [arrivalMessage, setArrivalMessage] = useState(null);
+  const [text, setText] = useState("");
+  const inputRef = useRef(null);
+  const flatListRef = useRef();
+  const [friend, setFriend] = useState({});
+
+  useEffect(() => {
+    socket.current = io(baseUrl);
+
+    socket.current.on("getMessage", (data) => {
+      setArrivalMessage({
+        senderId: data.senderId,
+        receiverId: data.receiverId,
+        conversationId: data.conversationId,
+        text: data.text,
+        createdAt: Date.now(),
+      });
+      console.log("data", data);
+    });
+  }, []);
+
+  useEffect(() => {
+    arrivalMessage &&
+      conversation?.members.includes(arrivalMessage.senderId) &&
+      setMessages((prev) => [...prev, arrivalMessage]);
+  }, [arrivalMessage, conversation]);
+
+  useEffect(() => {
+    const getMessages = async () => {
+      try {
+        const res = await axios.get(
+          `${baseUrl}/api/message/${conversation?._id}`
+        );
+        setMessages(res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getMessages();
+  }, [conversation?._id]);
+
+  const receiverId = conversation?.members.find(
+    (memberId) => memberId !== user._id
+  );
+
+  useEffect(() => {
+    const getUser = async () => {
+      try {
+        const token = await getUserToken();
+        const requestOptions = {
+          headers: {
+            Authorization: `${token}`,
+            "Content-Type": "application/json",
+          },
+        };
+
+        const res = await axios.get(
+          `${baseUrl}/api/users/user/${receiverId}`,
+          requestOptions
+        );
+        setFriend(res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getUser();
+  }, [conversation?._id]);
+
+  const handleSendMessage = async (e) => {
+    e.preventDefault();
+
+    setText("");
+    inputRef.current.clear();
+
+    setTimeout(() => {
+      setText("");
+    }, 100);
+
+    const message = {
+      senderId: user._id,
+      receiverId,
+      text,
+      conversationId: roomName,
+    };
+
+    socket.current.emit("sendMessage", message);
+
+    try {
+      const res = await axios.post(`${baseUrl}/api/message`, message);
+
+      setMessages([...messages, res.data]);
+    } catch (err) {
+      console.error("error", err);
+    }
+  };
 
   return (
     <KeyboardAvoidingView
@@ -167,17 +205,26 @@ const ChatScreen = ({ route, navigation }) => {
               <Icon name="close" size={30} color={colors.secondary} />
             </TouchableOpacity>
             <View style={styles.userChat}>
-              <Image source={user.profilepic} style={styles.image} />
+              <Image
+                source={require("../../../assets/defaultprofile.jpg")}
+                style={styles.image}
+              />
               <Text style={styles.bigText}>{user.username}</Text>
             </View>
             <View style={styles.messageContainer}>
-              <FlatList
+              {/* <FlatList
+                ref={flatListRef}
+                onContentSizeChange={() =>
+                  flatListRef.current.scrollToEnd({ animated: true })
+                }
                 data={messages}
-                keyExtractor={(item) => item.id.toString()}
+                keyExtractor={(item, index) =>
+                  item?._id?.toString() || index.toString()
+                }
                 renderItem={({ item }) => (
                   <View
                     style={
-                      item.sender
+                      item.senderId === user._id
                         ? styles.senderMessages
                         : styles.recieverMessages
                     }
@@ -185,14 +232,70 @@ const ChatScreen = ({ route, navigation }) => {
                       navigation.navigate("ChatScreen", { user: item })
                     }
                   >
-                    <View style={item.sender ? styles.sender : styles.reciever}>
-                      <Text style={styles.username}>{item.username}</Text>
-                      <Text style={styles.message}>{item.message}</Text>
-                      <Text style={styles.date}>{item.date}</Text>
+                    <View
+                      style={
+                        item.senderId === user._id
+                          ? styles.sender
+                          : styles.reciever
+                      }
+                    >
+                      <Text style={styles.username}>
+                        {item.senderId === user._id
+                          ? user.username
+                          : friend?.username}
+                      </Text>
+                      <Text style={styles.message}>{item.text}</Text>
+                      <Text style={styles.date}>
+                        {new Date(item.createdAt).toDateString() +
+                          " | " +
+                          new Date(item.createdAt).toLocaleTimeString()}
+                      </Text>
                     </View>
                   </View>
                 )}
-              />
+              /> */}
+
+              <ScrollView
+                ref={flatListRef}
+                onContentSizeChange={() =>
+                  flatListRef.current.scrollToEnd({ animated: true })
+                }
+              >
+                {messages.map((item, index) => (
+                  <View
+                    key={item?._id?.toString() || index.toString()}
+                    style={
+                      item.senderId === user._id
+                        ? styles.senderMessages
+                        : styles.recieverMessages
+                    }
+                    onPress={() =>
+                      navigation.navigate("ChatScreen", { user: item })
+                    }
+                  >
+                    <View
+                      style={
+                        item.senderId === user._id
+                          ? styles.sender
+                          : styles.reciever
+                      }
+                    >
+                      <Text style={styles.username}>
+                        {item.senderId === user._id
+                          ? user.username
+                          : friend?.username}
+                      </Text>
+                      <Text style={styles.message}>{item.text}</Text>
+                      <Text style={styles.date}>
+                        {new Date(item.createdAt).toDateString() +
+                          " | " +
+                          new Date(item.createdAt).toLocaleTimeString()}
+                      </Text>
+                    </View>
+                  </View>
+                ))}
+              </ScrollView>
+
               <View
                 style={{
                   ...styles.chatForm,
@@ -201,11 +304,16 @@ const ChatScreen = ({ route, navigation }) => {
               >
                 <View style={styles.inputbox}>
                   <TextInput
+                    ref={inputRef}
                     placeholderTextColor={colors.opaque}
                     style={styles.input}
                     placeholder="Type your message here..."
+                    onChangeText={(newText) => setText(newText)}
                   />
-                  <TouchableOpacity style={styles.sendBtn}>
+                  <TouchableOpacity
+                    style={styles.sendBtn}
+                    onPress={handleSendMessage}
+                  >
                     <Icon
                       name="send"
                       style={{ transform: [{ rotate: "-30deg" }] }}
